@@ -1,0 +1,507 @@
+#include "estructura.h"
+
+#include <QtWidgets>
+#include <stdio.h>
+#include <iostream>
+
+
+Estructura::Estructura(int ta, int nav, int npi, QString *fe, QString *noV, QString *ori, QString *des, QString *pi, QString *ini, QString *fin, QString *avi, QWidget *p)
+        : QWidget(p)
+{
+    fecha=new QString;
+    nomVuelo=new QString;
+    origen=new QString;
+    destino=new QString;
+    hInicio=new QString;
+    hFin=new QString;
+    piloto=new QString;
+    avion=new QString;
+
+
+    tam = ta;
+    numeroAviones=nav;
+    numeroPilotos=npi;
+    fecha=fe;
+    avion = avi;
+    nomVuelo=noV;
+    origen=ori;
+    destino=des;
+    hInicio=ini;
+    hFin=fin;
+    piloto=pi;
+}
+
+
+void Estructura::crear(QVBoxLayout *layoutGeneral){
+
+
+
+//    Añadiendo horario
+    QHBoxLayout *horasLayout = new QHBoxLayout();
+    horarios(horasLayout);
+    layoutGeneral->addLayout(horasLayout);
+
+
+
+//    Añadiendo aviones y vuelos
+    QGridLayout *aviones_vuelos = new QGridLayout();
+    aviones(aviones_vuelos);
+    layoutGeneral->addLayout(aviones_vuelos);
+
+}
+
+
+void Estructura::horarios(QHBoxLayout *layout){
+
+    int numeroHoras = 33;
+    int m=0;
+    int h=0;
+
+//    Creando Labels
+    QLabel *nameLabel = new QLabel(tr("Horas:"));
+    QLabel *hora[numeroHoras];
+
+
+    for (int i = 0; i < numeroHoras; i++){
+        hora[i] = new QLabel(this);
+        QTime hora_minuto(6+h,0+m);
+        QString hm;
+        hm=hora_minuto.toString("hh:mm");
+        hora[i]->setText(hm);
+        m=m+30;
+        if (m==60){
+            m=0;
+            h++;
+        }
+    }
+
+
+    int a;
+    a=hora[1]->width();
+//    std::cout << "Ancho de la hora " << a << std::endl;
+
+//    Añadiendo horario
+    layout->addWidget(nameLabel);
+    layout->addSpacing(12);
+
+//    QLabel *nueveYmedia = new QLabel(tr("9:00"));
+//    nueveYmedia->setStyleSheet("QLabel { background-color : red; color : blue; }");
+//    layout->addWidget(nueveYmedia);
+    for(int i= 0; i < numeroHoras; i++)
+    {
+       layout->addWidget(hora[i]);
+    }
+}
+
+void Estructura::aviones(QGridLayout *contenedor){
+
+        QVBoxLayout *aviones = new QVBoxLayout();
+
+        int numeroAviones=18;
+
+        QLabel *avion[numeroAviones];
+
+//        Creando aviones
+        aviones->addSpacing(3);
+        QLabel *tamano = new QLabel(tr("Avion1"));
+        aviones->addWidget(tamano);
+        for (int i = 1; i < numeroAviones; i++){
+           avion[i] = new QLabel(this);
+           avion[i]->setText( tr("Avión %1").arg(i+1) );
+//           avion[i]->setStyleSheet("QLabel { background-color : red; color : blue; }");
+           aviones->addWidget(avion[i]);
+        }
+
+        int a;
+        a=avion[1]->height();
+//        std::cout << "Ancho .del avion " << a << std::endl;
+
+        aviones->addSpacing(5);
+
+//        Añadiendo al layout
+        contenedor->addLayout(aviones,0,1);
+
+//         Vuelos
+        QVBoxLayout *vuelosHora = new QVBoxLayout();
+
+        int numVuelos=0;
+        for(int i=0;i<tam;i++){
+            if(fecha[i]=="05/04/2012")
+                numVuelos++;
+        }
+
+
+        QString *nomA = new QString[numVuelos];
+        QString *nomB = new QString[numVuelos];
+        float horarioInicio[numVuelos];
+        float horarioFin[numVuelos];
+        QString *nombre=new QString[numVuelos];
+
+        int z=0;
+        for(int i=0;i<tam;i++){
+            if(fecha[i]=="05/04/2012"){
+                nomA[z]=origen[i];
+                nomB[z]=destino[i];
+                nombre[z]=nomVuelo[i];
+                QString *aux=new QString(hInicio[i]);
+                horarioInicio[z]=convertirHora(aux);
+                QString *aux2=new QString(hFin[i]);
+                horarioFin[z]=convertirHora(aux2);
+                z++;
+            }
+        }
+
+
+        vuelos(vuelosHora, nomA, nomB, nombre, numVuelos,horarioInicio, horarioFin,z);
+
+//        Añadiendo vuelos al Layout
+        contenedor->addLayout(vuelosHora,0,2);
+
+
+
+
+    }
+
+void Estructura::vuelos(QVBoxLayout *layout, QString *origen, QString *destino, QString *nombre, int numVuelos, float horaInicio[], float horaFin[], int tam){
+
+//    for (int i; i<numeroAviones;i++){
+//        std::cout << "avion " << avion[i].toStdString() <<std::endl;
+
+//    }
+
+    QLabel *label=new QLabel();
+    int largo=20.5;
+    float anchoColumna=38.85;
+    float inicioRectangle=anchoColumna/2;
+
+//    Draw pixmap general
+        QPixmap pixmap(1364,370);
+        pixmap.fill(QColor("transparent"));
+
+//    Draw painter general
+        QPainter painter(&pixmap);
+        painter.setBrush(QColor("grey"));
+
+//        *************************************************************
+//        CUADRICULA DE COLUMNAS Y FILAS
+//        for(int i=1; i<=(370/20.5);i++){
+//            painter.drawRect(0,(i*20.5),1200,0);
+////            std::cout << (i*20.5)<<std::endl;
+//        }
+
+//        for(int i=1; i<=(1200/39.15);i++){
+//            painter.drawRect((i*39.15),0,0,370);
+////            std::cout << (i*39.15)<<std::endl;
+//        }
+        painter.setBrush(QColor("yellow"));
+
+//***********************************************************
+//        CUADRICULA, IMPORTANTE
+
+//        for(int i=0; i<=(370/20.5);i++){
+//            painter.drawRect(0,(i*20.5)+(10)+(1/4),1384,1);
+////            std::cout << (i*20.5)+(10)+(1/4)<<std::endl;
+//        }
+
+//        for(int i=0; i<=(1384/38.85);i++){
+//            painter.drawRect((i*38.85)+19+0.5+((15/2)/100),0,1,370);
+////            std::cout << "iteracion " << i << ": " <<(i*38.85)+19+0.5+((15/2)/100)<<std::endl;
+//        }
+
+//        *************************************************************
+
+
+
+        float xRectangle;
+        float yRectangle;
+//        Saber en que avion va cada vuelo
+        int avionVuelo[tam];
+        float horaInicioOrdenada[tam];
+        float horaFinOrdenada[tam];
+        int avionSiguiente[tam];
+        QString *nombreSiguiente = new QString[tam];
+        int z=0;
+
+        for(int i=0;i<numVuelos;i++){
+            z=0;
+            for(int j = 0;j<numeroAviones;j++){
+                QStringList list = avion[j].split(QRegExp(";"));
+
+//                int kk=list.size();
+//                std::cout << "Tamaño " << kk <<std::endl;
+
+                QString *lista = new QString[list.size()];
+                for(int k=1;k<list.size();k++){
+                    lista[k]=tr(list.at(k).toLocal8Bit().constData());
+//                    std::cout << "lista " << lista[k].toStdString() <<std::endl;
+
+                    z++;
+                    if(lista[k] == nombre[i]){
+                        avionVuelo[i]=j;
+//                        std::cout << "lista " << lista[k].toStdString() <<std::endl;
+
+//                        ESTO ME AYUDARÁ A SABER CUAL ES LA RUTA DE CADA PILOTO PARA PINTARLO DESPUÉS
+                        horaInicioOrdenada[z-1]=horaInicio[i];
+                        horaFinOrdenada[z-1]=horaFin[i];
+                        avionSiguiente[z-1]=avionVuelo[i];
+                        nombreSiguiente[z-1]=nombre[i];
+
+//                        std::cout << "nombreSiguiente: " << nombreSiguiente[z-1].toStdString() <<std::endl;
+//                        std::cout << "z: " << z <<std::endl;
+
+
+                        xRectangle=inicioRectangle*(1+(4*(horaInicio[i]-6)));
+                        yRectangle=(10+20.5*j)-(largo/2);
+                        float tamRectangle=anchoColumna*(horaFin[i]-horaInicio[i])*2;
+                        float finRectangle = xRectangle+tamRectangle;
+                        float auxNomPosicion;
+                        if (tamRectangle < 40){
+                            auxNomPosicion=4;
+                        }else if(tamRectangle > 100){
+
+                            auxNomPosicion=2.5;
+                        }else{
+                            auxNomPosicion = 3;
+                        }
+
+                        int vCercano=0;
+
+                        painter.setBrush(QColor("blue"));
+//                        SI ESTÁN MUY JUNTOS LOS VUELOS NO SOBREPONER LOS NOMBRES. SOLO SE PINTA EL FINAL
+                        if(k>0)
+                            vCercano = vueloCercano(lista[k-1],nombre,horaInicio[i],horaFin,numVuelos);
+                        if(vCercano==0)
+                            painter.drawText((xRectangle-19),yRectangle+3.5,30,30,0,origen[i]);
+
+                        painter.drawRect(xRectangle,yRectangle,tamRectangle,20.5);
+                        painter.drawText((xRectangle+(tamRectangle/auxNomPosicion)),yRectangle+3.5,30,30,0,lista[k]);
+
+
+//                        SI ESTÁN MUY JUNTOS LOS VUELOS NO SOBREPONER LOS NOMBRES. SOLO SE PINTA EL FINAL
+                        vCercano==0;
+                        if(k<list.size()-1)
+                            vCercano = vueloCercano(lista[k+1],nombre,horaFin[i],horaInicio,numVuelos);
+                        int pos=vCercano+finRectangle+2;
+                        painter.drawText(pos,yRectangle+3.5,30,30,0,destino[i]);
+
+                    }
+                }
+            }
+
+
+
+        }
+
+//        int a;
+
+        int *listaPi=listaPilotos();
+
+//        for(int i=0;i<numVuelos;i++){
+//            a=-1;
+//            for(int j=0;j<numeroPilotos;j++){
+
+//                QStringList list = piloto[j].split(QRegExp(";"));
+
+
+//                QString *lista = new QString[list.size()];
+//                for(int k=0;k<list.size();k++){
+//                    if(a<numVuelos){
+//                        a++;
+////                        std::cout << "Que tiene " << a <<std::endl;
+//                    }
+////                    std::cout << "Que tiene " << list.at(k).toLocal8Bit().constData() <<std::endl;
+//                    lista[k]=tr(list.at(k).toLocal8Bit().constData());
+
+////                    std::cout << "k: " << k <<std::endl;
+////                    std::cout << "k maxima: " << list.size() <<std::endl;
+//                    if(lista[k] == nombre[i]){
+
+//                        std::cout << "Avion " << lista[k].toStdString() <<std::endl;
+//                        if(k!=list.size()-1){
+//                        std::cout << "Avion Siguiente " << lista[k+1].toStdString() <<std::endl;
+//                        }else{
+//                            std::cout << "Ultimo avion" <<std::endl;
+//                        }
+        for(int i=0;i<numVuelos;i++){
+
+                        std::cout << "lista: " << listaPi[i] <<std::endl;
+
+                        int posicion = buscarPosicionSiguiente(listaPi[i],nombreSiguiente,tam);
+                        int posicionSiguiente;
+//                        std::cout << "i: " << i <<std::endl;
+                        bool ult=ultimo(i);
+                        if(ult==0)
+                            posicionSiguiente = buscarPosicionSiguiente(listaPi[i+1],nombreSiguiente,tam);
+
+                        std::cout << "i: " << i <<std::endl;
+                        std::cout << "Ultimo:  " << ult <<std::endl;
+////                        std::cout << "k maxima: " << list.size() <<std::endl;
+////                        std::cout << "j: " << j <<std::endl;
+//                        std::cout << "posicion: " << posicion <<std::endl;
+//                        std::cout << "posicionSiguiente: " << posicionSiguiente <<std::endl;
+////                        std::cout << "nombre: " << nombre[posicion].toStdString() <<std::endl;
+//                        std::cout << "horaInicio[posicion]: " << horaInicioOrdenada[posicion] <<std::endl;
+//                        std::cout << "horaFin[posicion]: " << horaFinOrdenada[posicion] <<std::endl;
+
+
+
+
+                        float xRectangle1;
+                        float yRectangle1;
+                        float xRectangle2;
+                        float yRectangle2;
+                        float tamRectangle;
+
+//                        int resta;
+//                        if(list.size()<3){
+//                            resta=1;
+//                        }else{
+//                            resta=2;
+//                        }
+
+                        if(ult==0){
+                            tamRectangle=anchoColumna*(horaFinOrdenada[posicion]-horaInicioOrdenada[posicion])*2;
+                            xRectangle1=inicioRectangle*(1+(4*(horaInicioOrdenada[posicion]-6)))+ tamRectangle;
+
+                            xRectangle2=inicioRectangle*(1+(4*(horaInicioOrdenada[posicionSiguiente]-6)));
+                            yRectangle1=(10+20.5* avionSiguiente[posicion])-(largo/2)+10.25;
+                            yRectangle2=(10+20.5*( avionSiguiente[posicionSiguiente]))-(largo/2)+10.25;
+
+//                            std::cout << "x1 " << xRectangle1 <<std::endl;
+//                            std::cout << "y1 " << yRectangle1 <<std::endl;
+//                            std::cout << "x2 " << xRectangle2 <<std::endl;
+//                            std::cout << "y2 " << yRectangle2 <<std::endl;
+
+
+
+
+
+
+
+
+                            painter.drawLine(xRectangle1,yRectangle1,xRectangle2,yRectangle2);
+                        }
+//                    }
+//                }
+//            }
+
+        }
+
+
+
+
+
+
+    label->setPixmap(pixmap);
+
+
+    layout->addWidget(label);
+
+
+
+}
+
+
+
+float Estructura::convertirHora(QString *hora){
+
+    float a = hora->split(":")[0].toFloat();
+    float b = (hora->split(":")[1].toFloat() /100); /*100 conversion, 100 es decimal y 60 es minutos*/
+
+//    10/60=5/3
+    b=b*5/3;
+
+    return (b + a);
+}
+
+int Estructura::vueloCercano(QString vuelo, QString *nombre, float hora1,float horas[],int numVuelos){
+    float resta=0;
+    for(int i=0;i<numVuelos;i++){
+        if(vuelo==nombre[i]){
+            if(hora1>horas[1]){
+                resta = (hora1-horas[i]);
+            }else{
+                resta = (horas[i]-hora1);
+            }
+            if(resta<0.75){
+                return 5;
+            }
+        }
+    }
+    return 0;
+}
+
+
+int Estructura::buscarPosicionSiguiente(int lista, QString *nombreSiguiente, int tam){
+    for(int i=0;i<tam;i++){
+
+
+//        std::cout << "lista" << lista <<std::endl;
+
+//        if(i>0){
+          if(nombreSiguiente[i].toInt()==lista){
+//              std::cout << "lista" << lista <<std::endl;
+//              std::cout << "lista " << nombreSiguiente[i].toInt() <<std::endl;
+              return i;
+          }
+
+
+    }
+}
+
+int Estructura::buscarPosicionSiguienteAnterior(int lista, QString *nombreSiguiente, int tam){
+    for(int i=0;i<tam;i++){
+
+//        if(i>0){
+//            if(nombreSiguiente[i-1]==lista)
+                return i;
+//        }
+
+    }
+}
+
+int *Estructura::listaPilotos(){
+    int aux=0;
+    int lista[tam];
+    for(int j=0;j<numeroPilotos;j++){
+        QStringList list = piloto[j].split(QRegExp(";"));
+        QString *listaPilotos = new QString[tam];
+        for(int k=0;k<list.size();k++){
+            if(tr(list.at(k).toLocal8Bit().constData())!=0){
+              listaPilotos[aux]=tr(list.at(k).toLocal8Bit().constData());
+              lista[aux]=listaPilotos[aux].toInt();
+              aux++;
+
+            }
+
+        }
+    }
+    int *plista=lista;
+    return plista;
+}
+
+bool Estructura::ultimo(int i){
+    int aux=0;
+//    std::cout << "i dentro " << tam <<std::endl;
+    for(int j=0;j<numeroPilotos;j++){
+        QStringList list = piloto[j].split(QRegExp(";"));
+        QString *listaPilotos = new QString[tam];
+        for(int k=0;k<list.size();k++){
+//            if(tr(list.at(k).toLocal8Bit().constData())!=0){
+            listaPilotos[aux]=tr(list.at(k).toLocal8Bit().constData());
+//            std::cout << "lista " << listaPilotos[aux].toStdString() <<std::endl;
+//            std::cout << "aux " << aux <<std::endl;
+//            std::cout << "k " << k <<std::endl;
+            aux++;
+            if(i==j && k==(list.size()-1)){
+                std::cout << "CACA"<<std::endl;
+                return 1;
+            }else if(i==j && list.size()==2 && k==1){
+                std::cout << "PIS" <<std::endl;
+                return 1;
+            }
+
+        }
+    }
+    return 0;
+}

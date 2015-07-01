@@ -1,0 +1,830 @@
+#include "reorden.h"
+
+#include <QtWidgets>
+#include <stdio.h>
+#include <iostream>
+
+
+//8412
+Reorden::Reorden(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi,QWidget *parent)
+    : QWidget(parent)
+{
+    tam = ta;
+
+
+    listaAbierta=new int[tam*3+1];
+    listaCerrada=new int[tam*3+1];
+    costF= new int [tam*3+1];
+    costF[1]=0;
+    avionesLista=new QString[(tam*3+1)];
+    avionesRutaSeguida=new QStringList[(tam*3+1)];
+    tiposOperacion=new int [5];
+    avionOperacion=new int [tam*3+1];
+    listaDondeEsta=new int [tam*3+1];
+    caminosComprobados=0;
+    numeroDeElementosEnListaAbierta=0;
+    numeroDeElementosEnListaCerrada=0;
+
+//    costeCPiloto
+    tiposOperacion[0]=2;
+//    costeRetraso
+    tiposOperacion[1]=6;
+//    costeCAvion
+    tiposOperacion[2]=15;
+//    costeCancelar
+    tiposOperacion[3]=100;
+//    costeImposible
+    tiposOperacion[4]=1000000000;
+//    óptimo
+    tiposOperacion[10]=0;
+
+
+
+
+    nomVuelo=new QString;
+    origen=new QString;
+    destino=new QString;
+    hInicio=new float;
+    hFin=new float;
+    piloto=new QString;
+    avion=new QString;
+
+
+    numeroAviones=nav;
+    numeroPilotos=npi;
+    fecha=fe;
+    avion = avi;
+    nomVuelo=noV;
+    origen=ori;
+    destino=des;
+    hInicio=ini;
+    hFin=fin;
+    piloto=pi;
+}
+
+void Reorden::menu(QHBoxLayout *layout){
+
+    layout->addSpacing(60);
+    QPushButton *buttons[3];
+
+//    for (int i = 0; i < 3; ++i) {
+//        buttons[i] = new QPushButton(tr("Button %1").arg(i + 1));
+//        layout->addWidget(buttons[i]);
+
+//    }
+
+    buttons[0] = new QPushButton(tr("Reorden"));
+    buttons[1] = new QPushButton(tr("Otro"));
+
+    layout->addWidget(buttons[0]);
+    layout->addWidget(buttons[1]);
+
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox;
+
+
+//    QPushButton *rotateWidgetsButton = buttonBox->addButton(tr("SLOTO"),QDialogButtonBox::ActionRole);
+
+    QPushButton * closeButton = buttonBox->addButton(QDialogButtonBox::Close);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+
+
+//    connect(rotateWidgetsButton, SIGNAL(clicked()), this, SLOT(sloto()));
+
+
+
+    layout->addWidget(buttonBox);
+
+}
+
+void Reorden::sloto(){
+//    std::cout << "hola" << std::endl;
+}
+
+void Reorden::crear(QVBoxLayout *layoutGeneral){
+
+
+//    Añadiendo horario
+    QHBoxLayout *formulario = new QHBoxLayout();
+//    horarios(horasLayout);
+//    layoutGeneral->addLayo0ut(horasLayout);
+
+}
+
+void Reorden::algoritmo(QString vuelo, float retraso){
+
+    int finVueloActual=hFin[busquedaPosicion((vuelo))];
+    int inicioAvionSiguiente=1000;
+    int inicioPilotoSiguiente=1000;
+    QString vueloPilotoSiguiente=busquedaVueloPilotoSiguiente(vuelo);
+    QString vueloAvionSiguiente=busquedaVueloAvionSiguiente(vuelo);
+
+
+    if(vueloPilotoSiguiente!=0)
+        inicioPilotoSiguiente=hInicio[busquedaPosicion(vueloPilotoSiguiente)];
+    if(vueloAvionSiguiente!=0)
+        inicioAvionSiguiente=hInicio[busquedaPosicion(vueloAvionSiguiente)];
+
+//    QStringList fonts;
+//        fonts << "Arial" << "Helvetica" << "Times" << "Courier";
+
+
+//        QString a = fonts.at(2).toLocal8Bit();
+//        std::cout << a.toStdString() << std::endl;
+
+
+//        for (int i = 0; i < fonts.size(); ++i)
+//             std::cout << fonts.at(i).toLocal8Bit().constData() << std::endl;
+
+    std::cout << "finVueloActual " << inicioAvionSiguiente << std::endl;
+    std::cout << "vueloPilotoSiguiente " << vueloPilotoSiguiente.toStdString() << std::endl;
+    std::cout << "vueloAvionSiguiente " << vueloAvionSiguiente.toStdString() << std::endl;
+    std::cout << "inicioAvionSiguiente " << inicioAvionSiguiente << std::endl;
+    std::cout << "inicioPilotoSiguiente " << inicioPilotoSiguiente << std::endl;
+
+//    COMPROBAR SI PASA ALGO POR RETRASAR. PUEDE SER QUE AVION TENGA VUELO O PILOTO TENGA VUELO
+    if( inicioAvionSiguiente>=finVueloActual+0.5+retraso
+            /*&& inicioPilotoSiguiente>=finVueloActual+0.5+retraso*/
+            || inicioAvionSiguiente==0){
+        std::cout << "NO PASO POR RETRASARLO. NO HACER ALGORITMO" << std::endl;
+
+    //    SI NO SE PUEDE HACEMOS ALGORITMO
+//    }else{
+
+//        insertarListaAbierta(vuelo,3,1);
+
+//    //    EMPEZAMOS CON EL AVION SIGUIENTE AL QUE SE VEA AFECTADO PUES ESTE DIRECTAMENTE SE RETRASA
+//        QString vueloSiguiente =busquedaVueloAvionSiguiente(vuelo);
+
+//        algoritmoEnSi(vuelo,vueloSiguiente, retraso);
+
+//        std::cout << "--------------LISTA CERRADA-------------------" << std::endl;
+
+//        for(int i = 1; i <= numeroDeElementosEnListaCerrada; i++){
+//            std::cout << "---------" <<std::endl;
+//            std::cout << "Avion " << avionesLista[listaCerrada[i]].toStdString() << " operación: " << avionOperacion[listaCerrada[i]]<<std::endl;
+//            std::cout << "Coste TOTAL " << devolverCostF(i) <<std::endl;
+//            std::cout << "Ruta Seguida " <<std::endl;
+//            for (int j = 0; j < avionesRutaSeguida[listaCerrada[i]].size(); ++j){
+//                  int posicion = avionesRutaSeguida[listaCerrada[i]].at(j).toLocal8Bit().toInt();
+//                  std::cout << posicion << ". avion '" << avionesLista[posicion].toStdString()
+//                            << "', Hora Inicio de este avion '" << hInicio[busquedaPosicion(avionesLista[posicion])]
+//                               << "' y operacion '" << avionOperacion[posicion] << "'" << std::endl;
+////                 std::cout << avionesRutaSeguida[listaCerrada[i]].at(j).toLocal8Bit().constData() << std::endl;
+
+//            }
+////            POSICION ANTERIOR DEL ELEMENTO
+
+//            int posicionAnterior;
+//            if(avionesRutaSeguida[listaCerrada[i]].size()>1){
+//                posicionAnterior= avionesRutaSeguida[listaCerrada[i]].at(avionesRutaSeguida[listaCerrada[i]].size()-2).toLocal8Bit().toInt();
+//            }else{
+//                posicionAnterior= avionesRutaSeguida[listaCerrada[i]].at(avionesRutaSeguida[listaCerrada[i]].size()-1).toLocal8Bit().toInt();
+//            }
+//            std::cout << posicionAnterior <<std::endl;
+
+//            if(numeroDeElementosEnListaCerrada==(i)){
+//                switch (avionOperacion[posicionAnterior]) {
+//                    case 0:
+//                      std::cout << "EL PILOTO DEL VUELO " << avionesLista[listaCerrada[i]].toStdString()<< " SE HARA CARGO" << std::endl;
+//                      break;
+//                    case 1:
+//                      std::cout << "SE RETRASA EL VUELO " << avionesLista[listaCerrada[i]].toStdString() << " Y SE SOLUCIONA" << std::endl;
+//                      break;
+//                    case 2:
+//                      std::cout << "EL AVION " << avionesLista[listaCerrada[i]].toStdString() << " SE HARA CARGO" << std::endl;
+//                      break;
+//                }
+//            }
+//        }
+
+//        delete listaAbierta;
+//        delete listaCerrada;
+//        delete costF;
+//        delete avionesRutaSeguida;
+//        delete avionesLista;
+//        delete listaDondeEsta;
+//        delete avionOperacion;
+
+
+//        avionesLista=new QString[(tam*3+1)];
+//        listaAbierta=new int[tam*3+2];
+//        listaCerrada=new int[tam];
+//        costF= new int [tam*3+1];
+//        avionOperacion=new int [tam*3+1];
+//        listaDondeEsta=new int [tam*3+1];
+//        avionesRutaSeguida=new QStringList[(tam*3+1)];
+//        caminosComprobados=0;
+//        costF[1]=0;
+//        numeroDeElementosEnListaAbierta=0;
+//        numeroDeElementosEnListaCerrada=0;
+
+    }
+
+}
+
+void Reorden::algoritmoEnSi(QString vueloPadre, QString vueloHijo, float retraso){
+
+//    AÑADIMOS A LA LISTA ABIERTA LAS TRES DISTINTAS OPCIONES QUE PUEDE SUCEDER
+//    EL TIPO DE OPERACIÓN 5 CORRESPONDE A QUE DA IGUAL EL TIPO DE OPERACION QUE SEA
+    insertar3enLista(vueloPadre, 5,vueloHijo);
+
+    while(numeroDeElementosEnListaAbierta!=0){
+        std::cout << "*********************************************" << caminosComprobados <<  std::endl;
+        std::cout << "numeroDeElementosEnListaAbierta " << numeroDeElementosEnListaAbierta <<  std::endl;
+
+        int temp=borrarListaAbierta(1);
+        std::cout << temp << " " << avionesLista[temp].toStdString() << ": " <<devolverCostF(temp) << "(operacion " << avionOperacion[temp] << ")" <<  std::endl;
+
+        insertarListaCerrada(temp);
+
+
+        int posicionActual=busquedaPosicion(avionesLista[temp]);
+//        std::cout << "avionOperacion:  " << avionOperacion[temp] << std::endl;
+
+        switch (avionOperacion[temp]) {
+            case 0:
+                busquedaPilotoSustitucion(posicionActual,temp);
+              break;
+            case 1:
+                retrasarAviones(vueloHijo,posicionActual,retraso,temp);
+              break;
+            case 2:
+                 busquedaAvionSustitucion(posicionActual,temp);
+              break;
+        }
+    }
+}
+
+
+
+void Reorden::retrasarAviones(QString vuelo, int posicionBusqueda, int retraso, int idCaminoPadre){
+    int posicionActual=posicionBusqueda;
+//    busquedaPilotoSustitucion(posicionActual);
+//    busquedaAvionSutitucion(posicionActual);
+    QString avionSiguiente =busquedaVueloAvionSiguiente(vuelo);
+    int posicionSiguiente=0;
+    QString avionSiguientePiloto = busquedaVueloPilotoSiguiente(vuelo);
+    int posicionSiguientePiloto=0;
+    if(avionSiguiente!="empty")
+        posicionSiguiente = busquedaPosicion(avionSiguiente);
+    if(avionSiguientePiloto!="empty")
+       posicionSiguientePiloto=busquedaPosicion(avionSiguientePiloto);
+
+    if(posicionSiguiente!=0){
+        if(hFin[posicionActual]+retraso+0.5 < 22.5){
+            if(hInicio[posicionSiguiente]>(hFin[posicionActual]+retraso+0.5) && hInicio[posicionSiguientePiloto]>(hFin[posicionActual]+retraso+0.5)){
+
+                nuevoEnListaCerrada(nomVuelo[posicionSiguiente],idCaminoPadre);
+//                hInicio[posicionActual]+=retraso;
+//                hFin[posicionActual]+=retraso;
+//                hInicio[posicionSiguiente]+=retraso;
+//                hFin[posicionSiguiente]+=retraso;
+
+
+
+//                CASO RETRASAR AVION
+            }else{
+                if((hInicio[posicionSiguiente]<(hFin[posicionActual]+retraso+0.5))){
+                    std::cout << "*************El else normal***********" << std::endl;
+                    std::cout << " avion Siguiente" << nomVuelo[posicionSiguiente].toStdString() << std::endl;
+                    std::cout << " avion vuelo " << vuelo.toStdString() << std::endl;
+//                    std::cout << "************"  << std::endl;
+//                    std::cout << "No" << std::endl;
+                    insertar3enLista(vuelo,1,nomVuelo[posicionSiguiente]);
+//                    std::cout << "avion siguiente: " << avionSiguiente.toStdString() << std::endl;
+//                    algoritmo(avionSiguiente, retraso);
+                }else{
+                    std::cout << "CHACHO, NO HA PASADO"  << std::endl;
+                }
+            }
+        }else{
+            std::cout << " avion " << nomVuelo[posicionActual].toStdString() << std::endl;
+            std::cout << "IMPOSIBLE" << std::endl;
+        }
+    }else{
+        if(hFin[posicionActual]+retraso+0.5 < 22.5){
+            std::cout << "**********Es ultima posicion pero se puede*************" << std::endl;
+            std::cout << " avion Siguiente " << nomVuelo[posicionSiguiente].toStdString() << std::endl;
+            std::cout << " avion vuelo " << vuelo.toStdString() << std::endl;
+            insertar3enLista(vuelo,1,nomVuelo[posicionSiguiente]);
+        }else{
+            std::cout << " avion " << nomVuelo[posicionActual].toStdString() << std::endl;
+            std::cout << "IMPOSIBLE ULTIMA POSICION" << std::endl;
+        }
+    }
+}
+
+
+
+
+void Reorden::busquedaPilotoSustitucion(int posicionBusqueda,int idCaminoPadre){
+    std::cout << "---------EMPIEZA 0--------------" << std::endl;
+    for(int i=0;i<posicionBusqueda;i++){
+        if((hFin[i]+0.5)<= hInicio[posicionBusqueda] && origen[posicionBusqueda]==destino[i]){
+            QString aux = busquedaVueloPilotoSiguiente(nomVuelo[i]);
+            std::cout << "vuelo aux: " << aux.toStdString() << std::endl;
+
+            if(aux == 0){
+                nuevoEnListaCerrada(nomVuelo[i],idCaminoPadre);
+//                ACABAR EL FOR
+                i=posicionBusqueda;
+                std::cout << "NO MÁS VUELOS" << std::endl;
+                std::cout << "vuelo: " << nomVuelo[i].toStdString() << std::endl;
+                std::cout << "Hora Inicio "<< hInicio[i] << std::endl;
+//                std::cout << "Lugar "<< destino[i].toStdString() << std::endl;
+//                std::cout << "De donde sale "<< origen[posicionBusqueda].toStdString() << std::endl;
+            }else{
+                int auxPosicion = busquedaPosicion(aux);
+                if(hInicio[auxPosicion] > hFin[posicionBusqueda]){
+                    std::cout << "************** " << std::endl;
+                    std::cout << "HAY MÁS" << std::endl;
+                    std::cout << "aux: " << aux.toStdString() << std::endl;
+
+                    int puede=pilotoPuedeVolver(auxPosicion,posicionBusqueda);
+                    if(puede==1){
+                        std::cout << "SI PUEDE SUSTITUIR Y VOLVER" << std::endl;
+                        nuevoEnListaCerrada(nomVuelo[i],idCaminoPadre);
+        //                ACABAR EL FOR
+                        i=posicionBusqueda;
+                    }else{
+                        std::cout << "NO PUEDE SUSTITUIR Y VOLVER. INSERTAR 3 EN LISTA" << std::endl;
+                        std::cout << "nomVuelo[i]" << nomVuelo[i].toStdString() << std::endl;
+                        std::cout << "nomVuelo[posicionBusqueda]" << nomVuelo[posicionBusqueda].toStdString() << std::endl;
+
+                        insertar3enLista(nomVuelo[posicionBusqueda],0,nomVuelo[i]);
+                    }
+                }else{
+                    std::cout << "NINGUN AVION CUMPLE LOS REQUISITOS. INSERTAR 3 EN LISTA" << std::endl;
+                }
+            }
+        }
+    }
+    std::cout << "--------SE ACABO 0----------" << std::endl;
+
+}
+
+int Reorden::pilotoPuedeVolver(int posicionDondeIria,int posicionSustituir){
+//    std::cout << "vuelo posicionDondeIria: " << nomVuelo[posicionDondeIria].toStdString()<< std::endl;
+//    std::cout << "hora: " << hInicio[posicionDondeIria]<< std::endl;
+//    std::cout << "destino: " << destino[posicionDondeIria].toStdString()<< std::endl;
+//    std::cout << "origen: " << origen[posicionDondeIria].toStdString()<< std::endl;
+
+//    std::cout << "vuelo posicionSustituir: " << nomVuelo[posicionSustituir].toStdString() << std::endl;
+//    std::cout << "posicionSustituir y de donde tiene que volver: " << destino[posicionSustituir].toStdString()<< std::endl;
+
+
+
+    for(int i=0;i<posicionDondeIria;i++){
+        if(hFin[i]<(hInicio[posicionDondeIria]) && origen[i]==destino[posicionSustituir]
+                && destino[i]==origen[posicionDondeIria] && hInicio[i]>hFin[posicionSustituir])
+        {
+//            std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxxx"  << std::endl;
+//            std::cout << "vuelo " << nomVuelo[i].toStdString() << std::endl;
+//            std::cout << "hora: " << hInicio[i]<< std::endl;
+//            std::cout << "fin: " << hFin[i]<< std::endl;
+//            std::cout << "destino: " << destino[i].toStdString()<< std::endl;
+//            std::cout << "origen: " << origen[i].toStdString()<< std::endl;
+//            std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxxx"  << std::endl;
+
+            return 1;
+        }
+    }
+
+    return 0;
+
+
+
+}
+void Reorden::busquedaAvionSustitucion(int posicionBusqueda,int idCaminoPadre){
+    std::cout << "---------EMPIEZA 2--------------" << std::endl;
+    for(int i=0;i<posicionBusqueda;i++){
+        if((hFin[i]+0.5)<= hInicio[posicionBusqueda] && origen[posicionBusqueda]==destino[i]){
+            QString aux = busquedaVueloAvionSiguiente(nomVuelo[i]);
+            std::cout << "vuelo aux: " << aux.toStdString() << std::endl;
+
+            if(aux == 0){
+                nuevoEnListaCerrada(nomVuelo[i],idCaminoPadre);
+//                ACABAR EL FOR
+                i=posicionBusqueda;
+                std::cout << "NO MÁS VUELOS" << std::endl;
+                std::cout << "vuelo: " << nomVuelo[i].toStdString() << std::endl;
+                std::cout << "Hora Inicio "<< hInicio[i] << std::endl;
+//                std::cout << "Lugar "<< destino[i].toStdString() << std::endl;
+//                std::cout << "De donde sale "<< origen[posicionBusqueda].toStdString() << std::endl;
+            }else{
+                int auxPosicion = busquedaPosicion(aux);
+                if(hInicio[auxPosicion] > hFin[posicionBusqueda]+0.5){
+                    std::cout << "************** " << std::endl;
+                    std::cout << "HAY MÁS VUELOS" << std::endl;
+                    std::cout << "aux: " << aux.toStdString() << std::endl;
+
+                    std::cout << "SI PUEDE SUSTITUIR Y VOLVER A SU LUGAR DE INICIO" << std::endl;
+                    nuevoEnListaCerrada(nomVuelo[i],idCaminoPadre);
+    //                ACABAR EL FOR
+                    i=posicionBusqueda;
+
+                }else{
+                    std::cout << "NO PUEDE SUSTITUIR Y VOLVER. INSERTAR 3 EN LISTA" << std::endl;
+                    insertar3enLista(nomVuelo[posicionBusqueda],0,nomVuelo[i]);
+                }
+            }
+        }
+    }
+    std::cout << "--------SE ACABO 2----------" << std::endl;
+
+}
+
+
+
+
+
+void Reorden::insertar3enLista(QString vueloAnterior, int operacionAnterior, QString vuelo){
+    std::cout << "insertar3enLista vuelo:" << vuelo.toStdString() <<
+              " que vino de " << vueloAnterior.toStdString() << " " << operacionAnterior
+              << std::endl;
+    std::cout << "************************* EXISTE VUELO EN LA LISTA?" << std::endl;
+    int existe=buscarVuelo(vuelo,operacionAnterior);
+    std::cout << "************************* HAY POSICION ANTERIOR?" << std::endl;
+    int posVueloAnterior=buscarVuelo(vueloAnterior,operacionAnterior);
+    std::cout << "num Elementos " << numeroDeElementosEnListaAbierta << std::endl;
+
+
+    std::cout << "vueloAnterior: " << vueloAnterior.toStdString() << std::endl;
+    std::cout << "posVueloAnterior: " << posVueloAnterior << std::endl;
+    std::cout << "existe(valor): " << existe << std::endl;
+
+
+
+
+
+//    SI NO ESTÁ EN NINGUNA LISTA
+    if(existe==-1){
+        for(int i=0;i<3;i++){
+            std::cout << "Iteracion " << i << std::endl;
+            insertarListaAbierta(vuelo,i,posVueloAnterior);
+            QString s = QString::number(caminosComprobados);
+            if(posVueloAnterior!=-1){
+                avionesRutaSeguida[caminosComprobados]=avionesRutaSeguida[posVueloAnterior];
+            }
+            avionesRutaSeguida[caminosComprobados] << s;
+
+            std::cout << "----------Final Iteracion-------- " << i << std::endl;
+        }
+    }else{
+        for(int i=0;i<3;i++){
+            std::cout << "existe(valor): " << existe << std::endl;
+            std::cout << " EN INSERTAR TODAVIA: Iteracion " << i <<" ,la lista abierta es " << existe+i
+                         << " cuyo avion es "<< avionesLista[existe+i].toStdString()
+                         << " operacion " << avionOperacion[existe+i]
+                         << " y coste "<< devolverCostF(existe+i) << std::endl;
+            if(devolverCostF(existe+i)<(devolverCostF(posVueloAnterior)+tiposOperacion[i])){
+                if(listaDondeEsta[existe+i]==0){
+                    std::cout << "EXISTE EN LISTA CERRADA" << std::endl;
+                    reordenCerrada(existe+i);
+                }else{
+                    std::cout << "EXISTE EN LISTA ABIERTA" << std::endl;
+                    reordenAbierta(existe+i);
+                }
+            }
+        }
+    }
+
+}
+
+void Reorden::insertarListaAbierta(QString vuelo, int i, int posVueloAnterior){
+
+    caminosComprobados = caminosComprobados +1;
+
+    //nombreAvion
+    avionesLista[caminosComprobados]=vuelo;
+//    avionesRutaSeguida[caminosComprobados]=
+
+    //tipo de operacion
+    avionOperacion[caminosComprobados]=i;
+    listaDondeEsta[caminosComprobados]=1;
+
+    numeroDeElementosEnListaAbierta = numeroDeElementosEnListaAbierta+1;
+    listaAbierta[numeroDeElementosEnListaAbierta] = caminosComprobados;
+    if(posVueloAnterior!=-1){
+        insertarCostF(caminosComprobados,devolverCostF(posVueloAnterior)+tiposOperacion[i]);
+    }else{
+        insertarCostF(caminosComprobados,tiposOperacion[i]);
+    }
+
+    std::cout << "coste elemento " << caminosComprobados << ", vuelo " <<
+                 avionesLista[caminosComprobados].toStdString() << ": " <<
+                 devolverCostF(caminosComprobados) << std::endl;
+
+    int m = numeroDeElementosEnListaAbierta;
+
+    while(m != 1){
+        if(devolverCostF(listaAbierta[m]) <= devolverCostF(listaAbierta[m/2])){
+           int temp = listaAbierta[m/2];
+           listaAbierta[m/2] = listaAbierta[m];
+           listaAbierta[m] = temp;
+
+           m = m/2;
+        }else{
+          m=1;
+        }
+
+    }
+    std::cout << "num Elementos " << numeroDeElementosEnListaAbierta << std::endl;
+
+}
+
+int Reorden::borrarListaAbierta(int devolver){
+    int aux=listaAbierta[1];
+
+    listaAbierta[1] = listaAbierta[numeroDeElementosEnListaAbierta];
+    numeroDeElementosEnListaAbierta = numeroDeElementosEnListaAbierta - 1;
+
+    int v = 1;
+    int u = v;
+    int m=1;
+    while(m!=0){
+
+        if((2*u+1) <= numeroDeElementosEnListaAbierta){
+            if(devolverCostF(listaAbierta[u]) >= devolverCostF(listaAbierta[2*u]))
+                v=2*u;
+
+            if(devolverCostF(listaAbierta[v]) >= devolverCostF(listaAbierta[2*u+1]))
+                v = 2*u+1;
+
+
+        }else if(2*u <= numeroDeElementosEnListaAbierta){
+            m=0;
+            if(devolverCostF(listaAbierta[u]) >= devolverCostF(listaAbierta[2*u]))
+                v=2*u;
+        }
+
+        if(devolverCostF(listaAbierta[v])<devolverCostF(listaAbierta[u])){
+            int temp = listaAbierta[u];
+            listaAbierta[u] = listaAbierta[v];
+            listaAbierta[v] = temp;
+        }else{
+            m=0;
+        }
+    }
+    if(devolver==1){
+        return aux;
+    }else{
+        return 0;
+    }
+}
+
+void Reorden::nuevoEnListaCerrada(QString vuelo, int idCaminoPadre){
+    caminosComprobados++;
+    //vuelo
+    avionesLista[caminosComprobados]=vuelo;
+    //tipo de operacion
+    avionOperacion[caminosComprobados]=10;
+
+    insertarCostF(caminosComprobados,devolverCostF(idCaminoPadre));
+
+    QString s = QString::number(caminosComprobados);
+    avionesRutaSeguida[caminosComprobados]=avionesRutaSeguida[idCaminoPadre];
+    avionesRutaSeguida[caminosComprobados] << s;
+
+    //    SE HA ENCONTRADO UN NODO FIN. CONCLUSIOND DEL ALGORITMO
+    numeroDeElementosEnListaAbierta=0;
+
+
+    std::cout << "ESTA VA A SER EL ÚLTIMO A INSERTAR. SE HA RESOLVIDO EL PROBLEMA" <<  std::endl;
+    insertarListaCerrada(caminosComprobados);
+
+
+}
+
+void Reorden::insertarListaCerrada(int id){
+    std::cout << "VOY A INSERTAR EN LISTA CERRADA: " << avionesLista[id].toStdString() <<  std::endl;
+
+    listaDondeEsta[id]=0;
+
+    numeroDeElementosEnListaCerrada = numeroDeElementosEnListaCerrada+1;
+    listaCerrada[numeroDeElementosEnListaCerrada] = id;
+
+}
+
+int Reorden::buscarVuelo(QString vuelo,int operacion){
+    std::cout << "********************************************* vuelo: " << vuelo.toStdString() <<  std::endl;
+    std::cout << "********************************************* operacion: " << operacion <<  std::endl;
+    std::cout << "********************************************* -------------" <<  std::endl;
+
+    for(int i=1;i<=caminosComprobados;i++){
+        std::cout << "********************************************* i: " << i <<  std::endl;
+        std::cout << "********************************************* Avion lista: " << avionesLista[i].toStdString() <<  std::endl;
+        std::cout << "********************************************* operacion: " << avionOperacion[i] <<  std::endl;
+        std::cout << "********************************************* tipo operacion: " << listaDondeEsta[i] <<  std::endl;
+
+        if(avionesLista[i]==vuelo && operacion==9)
+            return i;
+        if(avionesLista[i]==vuelo && avionOperacion[i]==operacion)
+            return i;
+    }
+    //SI NO HAY NINGÚN ELEMENTO IGUAL
+    return -1;
+}
+
+void Reorden::reordenAbierta(int id){
+    std::cout << "num Elementos " << numeroDeElementosEnListaAbierta << std::endl;
+
+    std::cout << "Cacho, entro en reorden. Ahora ID: " << id << std::endl;
+
+    int posicion=posicionAbierta(id);
+
+    std::cout << "Avion vuelo id: " << avionesLista[id].toStdString() << std::endl;
+
+    std::cout << "Posicion " << posicion << std::endl;
+
+    caminosComprobados = caminosComprobados +1;
+
+    avionesRutaSeguida[caminosComprobados]=avionesRutaSeguida[id];
+
+    //nombreAvion
+    avionesLista[caminosComprobados]=avionesLista[id];
+
+    //tipo de operacion
+    avionOperacion[caminosComprobados]=avionOperacion[id];
+    listaDondeEsta[caminosComprobados]=1;
+
+    listaAbierta[posicion] = caminosComprobados;
+//    insertarCostF(caminosComprobados,tiposOperacion[i]);
+    std::cout << "HA LLEGADO AQUI" <<  std::endl;
+
+//    PROCEDEMOS A COMPROBAR SI EL ELEMENTO NUEVO CON MENOR COSTE DEBE IR MÁS ARRIBA
+//    EN LA LISTA
+    colocarAscendenteAbierta(posicion);
+    std::cout << "HA PASADO" <<  std::endl;
+
+
+//    LE AÑADIMOS EL COSTE IMPOSIBLE PARA QUE NUNCA SALGA Y
+//    POR LE QUITAMOS EL NOMBRE DEL AVION POR SI RECORREMOS
+//    OTRA VEZ TODOS LOS VUELOS
+    avionesLista[id]="0";
+    insertarCostF(id,tiposOperacion[4]);
+
+
+}
+
+
+void Reorden::reordenCerrada(int id){
+
+    int posicion=posicionCerrada(id);
+    caminosComprobados = caminosComprobados +1;
+
+    avionesRutaSeguida[caminosComprobados]=avionesRutaSeguida[id];
+
+    //nombreAvion
+    avionesLista[caminosComprobados]=avionesLista[id];
+
+    //tipo de operacion
+    avionOperacion[caminosComprobados]=avionOperacion[id];
+    listaDondeEsta[caminosComprobados]=0;
+
+    listaCerrada[posicion] = caminosComprobados;
+//    insertarCostF(caminosComprobados,tiposOperacion[i]);
+
+//    PROCEDEMOS A COMPROBAR SI EL ELEMENTO NUEVO CON MENOR COSTE DEBE IR MÁS ARRIBA
+//    EN LA LISTA
+    colocarAscendenteCerrada(posicion);
+
+//    LE AÑADIMOS EL COSTE IMPOSIBLE PARA QUE NUNCA SALGA Y
+//    POR LE QUITAMOS EL NOMBRE DEL AVION POR SI RECORREMOS
+//    OTRA VEZ TODOS LOS VUELOS
+    avionesLista[id]="0";
+    insertarCostF(id,tiposOperacion[4]);
+
+}
+
+
+void Reorden::insertarCostF(int posicion, int coste){
+    costF[posicion]=coste;
+}
+
+int Reorden::devolverCostF(int posicion){
+    return costF[posicion];
+}
+
+int Reorden::posicionAbierta(int id){
+    std::cout << "num Elementos " << numeroDeElementosEnListaAbierta << std::endl;
+
+    for (int i=1;i<=numeroDeElementosEnListaAbierta;i++){
+        std::cout << "Iteracion " << i << " ,la lista abierta es " << listaAbierta[i]
+                     << " cuyo avion es "<< avionesLista[listaAbierta[i]].toStdString()
+                     << " operacion " << avionOperacion[listaAbierta[i]]
+                     << " y coste "<< devolverCostF(listaAbierta[i]) << std::endl;
+    }
+    for (int i=1;i<=numeroDeElementosEnListaAbierta;i++)
+        if(listaAbierta[i]==id)
+            return i;
+}
+
+int Reorden::posicionCerrada(int id){
+    for (int i=0;i<numeroDeElementosEnListaCerrada;i++)
+        if(listaCerrada[i]==id)
+            return i;
+}
+
+void Reorden::colocarAscendenteAbierta(int pos){
+    int m = pos;
+
+    std::cout << "DENTRO DE COLOCAR ASCENDENTE ABIERTA" <<  std::endl;
+    std::cout << "posicion" << pos << std::endl;
+
+
+    while(m != 1){
+//        std::cout << "m: " << m <<  std::endl;
+//        std::cout << "listaAbierta[m]: " << listaAbierta[m] <<  std::endl;
+//        std::cout << "listaAbierta[m/2]: " << listaAbierta[m/2] << std::endl;
+        if(devolverCostF(listaAbierta[m]) <= devolverCostF(listaAbierta[m/2])){
+           int temp = listaAbierta[m/2];
+           listaAbierta[m/2] = listaAbierta[m];
+           listaAbierta[m] = temp;
+
+           m = m/2;
+        }else{
+          m=1;
+        }
+
+    }
+    std::cout << "FUERA" <<  std::endl;
+
+}
+
+
+void Reorden::colocarAscendenteCerrada(int pos){
+    int m = pos;
+
+    while(m != 1){
+        if(devolverCostF(listaCerrada[m]) <= devolverCostF(listaCerrada[m/2])){
+           int temp = listaCerrada[m/2];
+           listaCerrada[m/2] = listaCerrada[m];
+           listaCerrada[m] = temp;
+
+           m = m/2;
+        }else{
+          m=1;
+        }
+
+    }
+}
+
+int Reorden::busquedaPosicion(QString vuelo){
+    for(int i = 0;i<tam;i++){
+        if(nomVuelo[i]==vuelo)
+            return i;
+    }
+    return -1;
+}
+
+
+QString Reorden::busquedaVueloPilotoSiguiente(QString vuelo){
+    for(int j = 0;j<numeroPilotos;j++){
+        std::cout << piloto[j].toStdString() <<std::endl;
+
+        QStringList list = piloto[j].split(QRegExp(";"));
+        QString *lista = new QString[list.size()];
+
+        for(int k=0;k<list.size();k++){
+            lista[k]=tr(list.at(k).toLocal8Bit().constData());
+            if(k !=0 || k!=' '){
+                std::cout << lista[k].toStdString() <<std::endl;
+            }
+        }
+        std::cout << "----------------" <<std::endl;
+    }
+
+
+    for(int j = 0;j<numeroPilotos;j++){
+        QStringList list = piloto[j].split(QRegExp(";"));
+        QString *lista = new QString[list.size()];
+
+        for(int k=0;k<list.size();k++){
+            lista[k]=tr(list.at(k).toLocal8Bit().constData());
+            if(k !=0 && lista[k-1]==vuelo){
+                std::cout << "HA RETORNADO " << lista[k].toStdString() << ". K=" << k <<std::endl;
+                return (lista[k]);
+            }
+        }
+    }
+    QString empty="empty";
+    return empty;
+}
+
+QString Reorden::busquedaVueloAvionSiguiente(QString vuelo){
+
+    for(int j = 0;j<numeroAviones;j++){
+        QStringList list = avion[j].split(QRegExp(";"));
+        QString *lista = new QString[list.size()];
+
+        for(int k=0;k<list.size();k++){
+            lista[k]=tr(list.at(k).toLocal8Bit().constData());
+            if(k !=0 && lista[k-1]==vuelo)
+              return (lista[k]);
+        }
+    }
+    QString empty="empty";
+    return empty;
+}

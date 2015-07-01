@@ -1,0 +1,195 @@
+#include "reorden.h"
+
+#include <QtWidgets>
+#include <stdio.h>
+#include <iostream>
+
+
+Reorden::Reorden(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi,QWidget *parent)
+    : QWidget(parent)
+{
+
+    nomVuelo=new QString;
+    origen=new QString;
+    destino=new QString;
+    hInicio=new float;
+    hFin=new float;
+    piloto=new QString;
+    avion=new QString;
+
+
+    tam = ta;
+    numeroAviones=nav;
+    numeroPilotos=npi;
+    fecha=fe;
+    avion = avi;
+    nomVuelo=noV;
+    origen=ori;
+    destino=des;
+    hInicio=ini;
+    hFin=fin;
+    piloto=pi;
+}
+
+void Reorden::menu(QHBoxLayout *layout){
+
+    layout->addSpacing(60);
+    QPushButton *buttons[3];
+
+//    for (int i = 0; i < 3; ++i) {
+//        buttons[i] = new QPushButton(tr("Button %1").arg(i + 1));
+//        layout->addWidget(buttons[i]);
+
+//    }
+
+    buttons[0] = new QPushButton(tr("Reorden"));
+    buttons[1] = new QPushButton(tr("Otro"));
+
+    layout->addWidget(buttons[0]);
+    layout->addWidget(buttons[1]);
+
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox;
+
+
+//    QPushButton *rotateWidgetsButton = buttonBox->addButton(tr("SLOTO"),QDialogButtonBox::ActionRole);
+
+    QPushButton * closeButton = buttonBox->addButton(QDialogButtonBox::Close);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+
+
+//    connect(rotateWidgetsButton, SIGNAL(clicked()), this, SLOT(sloto()));
+
+
+
+    layout->addWidget(buttonBox);
+
+}
+
+void Reorden::sloto(){
+    std::cout << "hola" << std::endl;
+}
+
+void Reorden::crear(QVBoxLayout *layoutGeneral){
+
+
+//    Añadiendo horario
+    QHBoxLayout *formulario = new QHBoxLayout();
+//    horarios(horasLayout);
+//    layoutGeneral->addLayout(horasLayout);
+
+}
+
+void Reorden::algoritmo(QString vuelo, float retraso){
+    int posicionActual=busquedaPosicion(vuelo);
+    QString avionSiguiente =busquedaVueloAvionSiguiente(vuelo);
+    int posicionSiguiente=0;
+    QString avionSiguientePiloto = busquedaVueloPilotoSiguiente(vuelo);
+    int posicionSiguientePiloto=0;
+    if(avionSiguiente!="empty")
+        posicionSiguiente = busquedaPosicion(avionSiguiente);
+    if(avionSiguientePiloto!="empty")
+       posicionSiguientePiloto=busquedaPosicion(avionSiguientePiloto);
+
+
+    std::cout << vuelo.toStdString() << std::endl;
+    std::cout << avionSiguiente.toStdString() << std::endl;
+//    std::cout << posicionSiguiente << std::endl;
+
+    std::cout << avionSiguientePiloto.toStdString() << std::endl;
+//    std::cout << posicionSiguientePiloto << std::endl;
+
+
+
+
+//    std::cout << hInicio[posicionSiguiente] << std::endl;
+//    std::cout << hFin[posicionActual]+retraso+0.5 << std::endl;
+
+    if(posicionSiguiente!=0){
+        if(hFin[posicionActual]+retraso+0.5 < 22.5){
+            if(hInicio[posicionSiguiente]>(hFin[posicionActual]+retraso+0.5) || hInicio[posicionSiguientePiloto]>(hFin[posicionActual]+retraso+0.5)){
+                std::cout << "Si" << std::endl;
+
+                hInicio[posicionActual]+=retraso;
+                hFin[posicionActual]+=retraso;
+                hInicio[posicionSiguiente]+=retraso;
+                hFin[posicionSiguiente]+=retraso;
+
+
+            }else{
+                if((hInicio[posicionSiguiente]<(hFin[posicionActual]+retraso+0.5))){
+                    std::cout << "No" << std::endl;
+                    algoritmo(avionSiguiente, retraso);
+                }else if(hInicio[posicionSiguientePiloto]<(hFin[posicionActual]+retraso+0.5)){
+                    std::cout << "No, Piloto exclusivamente" << std::endl;
+                    algoritmo(avionSiguientePiloto, retraso);
+                }
+
+            }
+        }else{
+            std::cout << "IMPOSIBLE" << std::endl;
+        }
+    }else{
+        if(hFin[posicionActual]+retraso+0.5 < 22.5){
+            std::cout << "Es ultima posicion pero se puede" << std::endl;
+
+            hInicio[posicionActual]+=retraso;
+            hFin[posicionActual]+=retraso;
+        }else{
+            std::cout << "IMPOSIBLE" << std::endl;
+        }
+    }
+
+}
+
+//void Reorden::mirarEnAvion(QString *vuelo){
+//    for()
+
+//}
+
+
+
+int Reorden::busquedaPosicion(QString vuelo){
+    for(int i = 0;i<tam;i++){
+        if(nomVuelo[i]==vuelo)
+            return i;
+    }
+}
+
+QString Reorden::busquedaVueloPilotoSiguiente(QString vuelo){
+
+    int aux=0;
+
+    for(int j = 0;j<numeroPilotos;j++){
+        QStringList list = piloto[j].split(QRegExp(";"));
+        QString *lista = new QString[list.size()];
+
+        for(int k=0;k<list.size();k++){
+            lista[k]=tr(list.at(k).toLocal8Bit().constData());
+            if(k !=0 && lista[k-1]==vuelo)
+                return (lista[k]);
+        }
+    }
+    QString empty="empty";
+    return empty;
+}
+
+
+QString Reorden::busquedaVueloAvionSiguiente(QString vuelo){
+
+    for(int j = 0;j<numeroAviones;j++){
+        QStringList list = avion[j].split(QRegExp(";"));
+        QString *lista = new QString[list.size()];
+
+        for(int k=0;k<list.size();k++){
+            lista[k]=tr(list.at(k).toLocal8Bit().constData());
+            if(k !=0 && lista[k-1]==vuelo)
+              return (lista[k]);
+        }
+    }
+    QString empty="empty";
+    return empty;
+}
+
+
+

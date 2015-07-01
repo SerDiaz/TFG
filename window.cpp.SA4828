@@ -1,0 +1,226 @@
+#include "window.h"
+#include "estructura.h"
+#include "reorden.h"
+
+#include <QtWidgets>
+#include <stdio.h>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <iostream>
+
+using namespace std;
+Window::Window(QWidget *parent)
+    : QWidget(parent)
+{
+
+
+//    this->setFixedWidth(1202);
+    this->setFixedWidth(1350);
+    this->setFixedHeight(450);
+
+    Datos();
+
+    QVBoxLayout *outerLayout = new QVBoxLayout(this);
+
+
+    estructura=new Estructura(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto, horarioInicio, horarioFin, avion);
+//*******************
+// DESCOMENTAR PARA QUE SE VEA TODO
+//*******************
+    estructura->crear(outerLayout);
+
+
+
+
+//        QString av=tr("8414");
+    QString av=tr("8134");
+
+    reorden = new Reorden(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto,horarioInicio,horarioFin,avion);
+
+    QHBoxLayout *formulario = new QHBoxLayout();
+//    reorden->menu(formulario);
+//    outerLayout->addLayout(formulario);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox;
+
+    QPushButton *closeButton = buttonBox->addButton(QDialogButtonBox::Close);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+
+    QPushButton *algo = buttonBox->addButton(QDialogButtonBox::ActionRole);
+    connect(algo, SIGNAL(clicked()), this, SLOT(hola()));
+
+//    connect(algo, SIGNAL(clicked()), this, SLOT(reorden->algoritmo(av,0.5)));
+
+    formulario->addWidget(buttonBox);
+
+
+    outerLayout->addLayout(formulario);
+
+
+
+
+    bool algoritmo=1;
+    if(algoritmo==1){
+
+//        reorden->algoritmo(av,0.5);
+//        QString pos = reorden->busquedaVueloAvionSiguiente(av);
+
+
+//        // POSICION DE 107 la Z=12
+//        std::cout << "avion 8414" << std::endl;
+//        std::cout << "pos " << pos.toStdString() << std::endl;
+
+
+    }
+
+   setWindowTitle(tr("TFG"));
+}
+
+void hola(){
+    std::cout << "hola" << endl;
+}
+
+void Window::Datos(){
+    QString aux;
+
+    //Lectura
+    QFile file_for_reading("vuelosabril12.txt");
+    file_for_reading.open(QIODevice::ReadOnly);
+    QTextStream text_stream_for_reading(&file_for_reading);
+
+
+    text_stream_for_reading >> aux;
+
+    QString auxFecha=aux;
+    int tam=0;
+    numVuelos=0;
+    fecha="05/04/2012";
+    while (aux!=0){
+        text_stream_for_reading >> aux;
+        text_stream_for_reading >> aux;
+        text_stream_for_reading >> aux;
+        text_stream_for_reading >> aux;
+        text_stream_for_reading >> aux;
+        text_stream_for_reading >> aux;
+        text_stream_for_reading >> aux;
+
+        auxFecha=aux;
+        if(auxFecha==fecha)
+            numVuelos++;
+        tam++;
+    }
+
+
+    nombre=new QString[numVuelos];
+    nomA=new QString[numVuelos];
+    nomB=new QString[numVuelos];
+    horarioInicio=new float[numVuelos];
+    horarioFin=new float[numVuelos];
+
+
+
+    text_stream_for_reading.seek(0);
+
+
+
+
+    int z=0;
+    QString aux2;
+    for(int i = 0; i < tam; i++){
+        text_stream_for_reading >> aux2;
+        if(aux2==fecha){
+            text_stream_for_reading >> aux;
+            text_stream_for_reading >> nombre[z];
+//            if(nombre[z] == tr("107"))
+//                std::cout << "z: " << z << " avion: " << nombre[z].toStdString() << std::endl;
+            text_stream_for_reading >> nomA[z];
+            text_stream_for_reading >> nomB[z];
+            text_stream_for_reading >> aux;
+            QString *auxHoraInicio=new QString(aux);
+            horarioInicio[z]=convertirHora(auxHoraInicio);
+            text_stream_for_reading >> aux;
+            QString *auxHoraFin=new QString(aux);
+            horarioFin[z]=convertirHora(auxHoraFin);
+            z++;
+        }else{
+            text_stream_for_reading >> aux;
+            text_stream_for_reading >> aux;
+            text_stream_for_reading >> aux;
+            text_stream_for_reading >> aux;
+            text_stream_for_reading >> aux;
+            text_stream_for_reading >> aux;
+        }
+    }
+
+
+        file_for_reading.close();
+////        ************************************
+
+
+        QFile salida("salida05_04_2012.txt");
+        salida.open(QIODevice::ReadOnly);
+        QTextStream text_salida(&salida);
+
+        text_salida >> aux;
+        text_salida >> aux;
+        text_salida >> aux;
+
+
+        nAviones=-1;
+        while (aux!="---"){
+            text_salida >> aux;
+            nAviones++;
+        }
+
+        nPilotos=-1;
+        while (aux!=0){
+            text_salida >> aux;
+            nPilotos++;
+        }
+
+
+        text_salida.seek(0);
+
+        text_salida >> aux;
+        text_salida >> aux;
+        text_salida >> aux;
+
+
+
+        avion = new QString[nAviones];
+        z=0;
+        while (z<nAviones){
+            text_salida >> avion[z];
+            z++;
+
+        }
+
+        text_salida >> aux;
+
+        int w=0;
+        piloto = new QString[nPilotos];
+        while (w<nPilotos){
+            text_salida >> piloto[w];
+            w++;
+
+        }
+         salida.close();
+
+
+
+}
+
+
+
+
+float Window::convertirHora(QString *hora){
+
+    float a = hora->split(":")[0].toFloat();
+    float b = (hora->split(":")[1].toFloat() /100); /*100 conversion, 100 es decimal y 60 es minutos*/
+
+//    10/60=5/3
+    b=b*5/3;
+
+    return (b + a);
+}
