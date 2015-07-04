@@ -20,56 +20,14 @@ Window::Window(QWidget *parent)
 
 //    this->setFixedWidth(1202);
     this->setFixedWidth(1350);
-    this->setFixedHeight(465);
+    this->setFixedHeight(485);
 
 //    cargarDatos();
     createMenus();
 
-    outerLayout = new QVBoxLayout(this);
+    mainLayout = new QVBoxLayout(this);
 
     std::cout << "outerLayout" << std::endl;
-
-    scene = new QGraphicsScene(this);
-    QGraphicsView *view = new QGraphicsView(scene);
-//    scene->addItem(outerLayout);
-//    view->show();
-//    outerLayout->
-//    setScene(scene);
-
-//    outerLayout->addWidget(view);
-
-    QBrush redBrush(Qt::red);
-    QPen blackpen(Qt::black);
-
-
-
-    blackpen.setWidth(6);
-    ellipse = scene->addEllipse(10,10,100,100,blackpen,redBrush);
-
-    ellipse->setPos(100, 100);
-    rectangle=scene->addRect(-100,-100,50,50,blackpen,redBrush);
-    rectangle->setFlag(QGraphicsItem::ItemIsMovable);
-
-    rectangle->setPos(150, 150);
-
-    QPointF posicionEllipse= ellipse->QGraphicsItem::pos();
-    int posicionX=posicionEllipse.x();
-    int posicionY=posicionEllipse.y();
-
-    std::cout << "posicionX: " << posicionX << std::endl;
-    std::cout << "posicionY: " << posicionY << std::endl;
-
-     QPointF posicionRectangle=rectangle->QGraphicsItem::pos();
-     posicionX=posicionRectangle.x();
-     posicionY=posicionRectangle.y();
-
-     std::cout << "posicionX: " << posicionX << std::endl;
-     std::cout << "posicionY: " << posicionY << std::endl;
-
-
-
-
-//    estructura=new Estructura(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto, horarioInicio, horarioFin, avion);
     estructura=new Estructura();
 
     std::cout << "Constructor estructura" << std::endl;
@@ -77,7 +35,7 @@ Window::Window(QWidget *parent)
 //*******************
 // DESCOMENTAR PARA QUE SE VEA TODO
 //*******************
-    estructura->crear(outerLayout);
+    estructura->crear(mainLayout);
 
     std::cout << "Se crea estructura" << std::endl;
 
@@ -91,57 +49,42 @@ Window::Window(QWidget *parent)
 
 
     QHBoxLayout *formulario = new QHBoxLayout();
-//    reorden->menu(formulario);
-//    outerLayout->addLayout(formulario);
-
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
 
-    QPushButton *closeButton = buttonBox->addButton(QDialogButtonBox::Close);
-    avionEdit = new QLineEdit(this);
-    QLabel* avn = new QLabel("Avion:", this);
-    retrasoEdit = new QLineEdit(this);
-    QLabel* retraso = new QLabel("Retraso:", this);
-    aceptar = new QPushButton(tr("Reordenar"));
     borrar = new QPushButton(tr("borrar"));
-    QPushButton *mostrar = new QPushButton(tr("mostrar"));
     crear = new QPushButton(tr("crear"));
-    probatura = new QPushButton(tr("probar"));
+//    probatura = new QPushButton(tr("probar"));
+    QPushButton *cerrar = new QPushButton(tr("cerrar"));
 
 
 
-    retrasoLayout = new QHBoxLayout;
-    retrasoLayout->addWidget(retraso);
-    retrasoLayout->addWidget(retrasoEdit);
-    retrasoLayout->addWidget(avn);
-    retrasoLayout->addWidget(avionEdit);
-    retrasoLayout->addWidget(aceptar);
-    retrasoLayout->addWidget(borrar);
-    retrasoLayout->addWidget(mostrar);
-    retrasoLayout->addWidget(crear);
-    retrasoLayout->addWidget(probatura);
+
+    opcionesLayout = new QHBoxLayout;
+
+    opcionesLayout->addWidget(borrar);
+    opcionesLayout->addWidget(crear);
+    opcionesLayout->addWidget(cerrar);
+//    retrasoLayout->addWidget(probatura);
+    crear->hide();
+    borrar->hide();
+    crearPress=0;     //PERMITE AL OPENFILE COMPROBAR QUE HA SIDO LA PRIMERA VEZ QUE ES USADO
 
 
 
-//    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
-//    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
-    connect(aceptar, SIGNAL(clicked()), this, SLOT(hola()));
+    connect(cerrar, SIGNAL(clicked()), this, SLOT(close()));
     connect(borrar, SIGNAL(clicked()), this, SLOT(borrarEstructura()));
-    connect(mostrar, SIGNAL(clicked()), this, SLOT(mostrarEstructura()));
     connect(crear, SIGNAL(clicked()), this, SLOT(crearEstructura()));
-    connect(probatura, SIGNAL(clicked()), this, SLOT(probar()));
-
+//    connect(probatura, SIGNAL(clicked()), this, SLOT(probar()));
 
 
 
 
     formulario->addWidget(buttonBox);
-    formulario->addLayout(retrasoLayout);
+    formulario->addLayout(opcionesLayout);
 
 
-    outerLayout->setMenuBar(menuBar);
-    outerLayout->addLayout(formulario);
+    mainLayout->setMenuBar(menuBar);
+    mainLayout->addLayout(formulario);
 
 
    setWindowTitle(tr("TFG"));
@@ -157,92 +100,62 @@ void Window::probar(){
 
 }
 
-void Window::herencia(){
-    std::cout << "HEREDA" << std::endl;
+
+void Window::setDatos(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, int taAr,Estructura*est)
+{
+    numVuelos=ta;
+    nAviones=nav;
+    nPilotos=npi;
+    fecha=fe;
+    nombre=noV;
+    nomA=ori;
+    nomB=des;
+    piloto=pi;
+    horarioInicio=ini;
+    horarioFin=fin;
+    avion=avi;
+    tamArchivo=taAr;
+    estructura=est;
+
 }
 
-void Window::hola(){
 
-    std::cout << "hola*******************" << std::endl;
+void Window::reordenarEstructura(QString nombreVuelo, float retraso)
+{
+
+    std::cout << "reordanEstructura*******************" << std::endl;
     std::cout << "tamArchivo: " << tamArchivo << std::endl;
     reorden = new Reorden(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto,horarioInicio,horarioFin,avion,tamArchivo);
-
-
-    if(avionEdit->text() != 0 && retrasoEdit->text() !=0)
-      reorden->algoritmo(avionEdit->text(),retrasoEdit->text().toFloat());
-     //        QString pos = reorden->busquedaVueloAvionSiguiente(av);
-
-
-     //        // POSICION DE 107 la Z=12
-     //        std::cout << "avion 8414" << std::endl;
-     //        std::cout << "pos " << pos.toStdString() << std::endl;
+    reorden->algoritmo(nombreVuelo,retraso);
     borrarEstructura();
     crearEstructura();
 }
 
+
 void Window::crearEstructura(){
+    crearPress=1;
+
     std::cout << "Crear estructura " << std::endl;
 
-//    if(fileOpened!=""){
-//        cargarDatos();
-        estructura->asignar(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto, horarioInicio, horarioFin, avion);
-        estructura->pintarVuelos();
-//    }
-}
 
-void Window::mostrarEstructura(){
-    estructura->mostrarWidget();
+
+    crear->hide();
+    borrar->show();
+
+    estructura->asignar(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto, horarioInicio, horarioFin, avion,tamArchivo,estructura);
+    estructura->pintarVuelos();
 
 }
 
 void Window::borrarEstructura(){
-//    layout()->removeAt(widget);
-//    delete widget;
-//    foreach(outerLayout->children())
-//    outerLayout->removeWidget(*parent);
-//    QWidget w;
-//    outerLayout->addWidget(w);
-
-//    label = new QLabel(outerLayout);
-
-//    label = new QLabel("text", outerLayout);
 
 
-
-//    crear->setVisible(false);
-//    probatura-> hide();
+    crear->show();
+    borrar->hide();
 
     estructura->borrarWidget();
-//    retrasoLayout->removeWidget(retrasoEdit);
-//    retrasoLayout->removeWidget(avionEdit);
-//    retrasoLayout->removeWidget(aceptar);
-//    retrasoLayout->removeWidget(borrar);
-//    retrasoLayout->removeWidget(crear);
-//    retrasoLayout->removeWidget(probatura);
-//    delete retrasoLayout;
-
-//    update();
-
-//    delete widget;
-
-//    delete outerLayout;
-//    Window();
-//    Window();
-//    outerLayout = new QVBoxLayout(this);
-    //    Window(this);
-//        estructura->borrarWidget();
-
-//    update();
-//    Window();
 
 
-
-
-
-}
-
-void Window::hola(int i){
-    std::cout << "hola " << i << endl;
 }
 
 
@@ -304,10 +217,10 @@ void Window::cargarDatos(){
             text_stream_for_reading >> nomB[z];
             text_stream_for_reading >> aux;
             QString *auxHoraInicio=new QString(aux);
-            horarioInicio[z]=convertirHora(auxHoraInicio);
+            horarioInicio[z]=aFloat(auxHoraInicio);
             text_stream_for_reading >> aux;
             QString *auxHoraFin=new QString(aux);
-            horarioFin[z]=convertirHora(auxHoraFin);
+            horarioFin[z]=aFloat(auxHoraFin);
             z++;
         }else{
             text_stream_for_reading >> aux;
@@ -380,51 +293,32 @@ void Window::cargarDatos(){
 }
 
 
-float Window::convertirHora(QString *hora){
-
-    float a = hora->split(":")[0].toFloat();
-    float b = (hora->split(":")[1].toFloat() /100); /*100 conversion, 100 es decimal y 60 es minutos*/
-
-//    10/60=5/3
-    b=b*5/3;
-
-    return (b + a);
-}
-
-
-
-//******************************************
-//******************************************
-//******************************************
-
-
-
 void Window::createMenus()
 {
     menuBar = new QMenuBar;
 
     std::cout << "hola" << std::endl;
-    fileMenu = new QMenu(tr("&File"), this);
+    fileMenu = new QMenu(tr("&Archivo"), this);
     menuBar->addMenu(fileMenu);
 
-    openAct = new QAction(tr("&Open..."),this);
+    openAct = new QAction(tr("&Abrir..."),this);
     fileMenu->addAction(openAct);
     connect(openAct, SIGNAL(triggered()), this, SLOT(openFile()));
 
-    saveAct = new QAction(tr("&Save As..."), this);
+    saveAct = new QAction(tr("&Guardar como..."), this);
     fileMenu->addAction(saveAct);
     connect(saveAct, SIGNAL(triggered()), this, SLOT(saveFile()));
 
     fileMenu->addSeparator();
 
-    exitAct = new QAction(tr("E&xit"), this);
+    exitAct = new QAction(tr("&Salir"), this);
     fileMenu->addAction(exitAct);
 
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
 
-    toolMenu = new QMenu(tr("&Tools"), this);
-    menuBar->addMenu(toolMenu);
+//    toolMenu = new QMenu(tr("&Tools"), this);
+//    menuBar->addMenu(toolMenu);
 
     std::cout << "Acabo crear menu" << std::endl;
 
@@ -434,15 +328,22 @@ void Window::createMenus()
 void Window::openFile()
 {
 
+
+
     fileOpened = QFileDialog::getOpenFileName(
                 this
                 ,tr("Open File"),"",
                 "All files(*.*);;Text File(*.txt)"
                 );
-    QMessageBox::information(this,tr("File Name"),fileOpened);
+//    QMessageBox::information(this,tr("Nombre del Archivo"),fileOpened);
 
-//    if (!fileName.isEmpty())
-//        addressWidget->readFromFile(fileName);
+    std::cout << fileOpened.toStdString() << std::endl;
+    if(fileOpened!=""){
+        cargarDatos();
+        std::cout << "fileOpened: " << fileOpened.toStdString() << std::endl;
+        if(crearPress==0)
+            crear->show();
+    }
 }
 
 void Window::saveFile()
@@ -454,13 +355,13 @@ void Window::saveFile()
 
 void Window::updateActions(const QItemSelection &selection)
 {
-    QModelIndexList indexes = selection.indexes();
+//    QModelIndexList indexes = selection.indexes();
 
-    if (!indexes.isEmpty()) {
-        removeAct->setEnabled(true);
-        editAct->setEnabled(true);
-    } else {
-        removeAct->setEnabled(false);
-        editAct->setEnabled(false);
-    }
+//    if (!indexes.isEmpty()) {
+//        removeAct->setEnabled(true);
+//        editAct->setEnabled(true);
+//    } else {
+//        removeAct->setEnabled(false);
+//        editAct->setEnabled(false);
+//    }
 }

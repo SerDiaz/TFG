@@ -18,16 +18,18 @@ SOURCES += main.cpp\
     reorden.cpp \
     reading.cpp \
     writing.cpp \
-    myrectangle.cpp \
-    middle.cpp
+    middle.cpp \
+    convertirhora.cpp \
+    rectangulo.cpp
 
 HEADERS  += window.h \
     estructura.h \
     reorden.h \
     reading.h \
     writing.h \
-    myrectangle.h \
-    middle.h
+    middle.h \
+    convertirhora.h \
+    rectangulo.h
 
 FORMS    += window.ui
 

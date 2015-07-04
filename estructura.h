@@ -4,7 +4,7 @@
 
 #include <QWidget>
 #include <QGridLayout>
-#include "myrectangle.h"
+#include "rectangulo.h"
 #include <QtCore>
 #include <QtGui>
 //#include <window.h>
@@ -18,7 +18,7 @@ class QSpinBox;
 class QGroupBox;
 class QStandardItemModel;
 class QTextEdit;
-class Myrectangle;
+class Rectangulo;
 
 
 class Estructura : public QWidget
@@ -26,7 +26,7 @@ class Estructura : public QWidget
 
 public:
     Estructura(QWidget *p = 0);
-    void asignar(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi);
+    void asignar(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi,int tamAr, Estructura *est);
     void crear(QVBoxLayout *boxlayout);
     void horarios();
     void aviones();
@@ -51,23 +51,24 @@ private:
     float *hFin;
     QString *piloto;
     QString *avion;
+    int tamArchivo;
     QLabel *label;
     QLabel *nameLabel;
     int numeroHoras = 33;
     QLabel *hora[33];
+    Estructura *estructura;
 
     int numeroAviones;
     int numeroPilotos;
     int tam;
 
-    float convertirHora(QString *hora);
     int vueloCercano(QString vuelo, QString *nombre, float hora1,float horas[]);
     int buscarPosicion(int lista, QString *nombreSiguiente);
     int *listaPilotos();
     bool ultimo(int i);
 
 
-    Myrectangle *myrectangle;
+    Rectangulo *rectangulo;
     QGraphicsView *view;
     QGraphicsScene *scene;
 

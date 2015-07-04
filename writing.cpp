@@ -197,8 +197,8 @@ void Writing::actionRewritting(){
                 std::cout << "hFin[posicionCambioDia[i]]: " << hFin[posicionCambioDia[i]] << std::endl;
 
                 nombre[posicionCambioGeneral[i]]=nomVuelo[posicionCambioDia[i]];
-                horarioInicio[posicionCambioGeneral[i]]=convertirHoraString(hInicio[posicionCambioDia[i]]);;
-                horarioFin[posicionCambioGeneral[i]]=convertirHoraString(hFin[posicionCambioDia[i]]);
+                horarioInicio[posicionCambioGeneral[i]]=aString(hInicio[posicionCambioDia[i]]);;
+                horarioFin[posicionCambioGeneral[i]]=aString(hFin[posicionCambioDia[i]]);
 
                 std::cout << "horarioInicio[posicionCambioGeneral[i]]: " << horarioInicio[posicionCambioGeneral[i]].toStdString() << std::endl;
                 std::cout << "horarioFin[posicionCambioGeneral[i]]: " << horarioFin[posicionCambioGeneral[i]].toStdString() << std::endl;
@@ -299,57 +299,6 @@ void Writing::rewrittingPilotoAvion(){
 
 }
 
-
-QString Writing::convertirHoraString(float hora){
-
-    int horaInt = (int)hora;
-    float minutosfloat = (hora-horaInt) * 100;
-//    60/10=3/5. CONVERSION DE DECIMAL A HEXADECIMAL(MINUTOS)
-    int minutosInt=minutosfloat*3/5;
-
-    QString horaString=QString::number(horaInt);
-    if (horaString=="0")
-        horaString=tr("00");
-
-    QString minutosString=QString::number(minutosInt);
-//      SI TIENE SOLO UNA CIFRA
-    switch (minutosInt) {
-        case 0:
-            minutosString=tr("00");
-        break;
-        case 1:
-            minutosString=tr("01");
-        break;
-        case 2:
-            minutosString=tr("02");
-        break;
-        case 3:
-            minutosString=tr("03");
-        break;
-        case 4:
-            minutosString=tr("04");
-        break;
-        case 5:
-            minutosString=tr("05");
-        break;
-        case 6:
-            minutosString=tr("06");
-        break;
-        case 7:
-            minutosString=tr("07");
-        break;
-        case 8:
-            minutosString=tr("08");
-        break;
-        case 9:
-            minutosString=tr("09");
-        break;
-    }
-
-    QString devolver = horaString + tr(":") + minutosString;
-
-    return devolver;
-}
 
 void Writing::readingGeneral(){
         QString aux;

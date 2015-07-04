@@ -7,6 +7,7 @@
 
 
 //8200 comprobar caso(antes del grande)
+// CUANDO AFECTA A LA VEZ AL VUELO DEL AVIÓN SIGUIENTE Y AL VUELO DEL PILOTO SIGUIENTE Y AMBOS SON DISTINTOS PETA
 Reorden::Reorden(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, int taAr, QWidget *parent)
     : QWidget(parent)
 {

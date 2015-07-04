@@ -108,7 +108,7 @@ void Estructura::aviones(){
 
 //        Creando aviones
         aviones->addSpacing(23);
-        QLabel *tamano = new QLabel(tr("Avion 1"));
+        QLabel *tamano = new QLabel(tr("Avion1"));
         aviones->addWidget(tamano);
         for (int i = 1; i < numeroAviones; i++){
            avion[i] = new QLabel(this);
@@ -173,8 +173,8 @@ void Estructura::vuelos(){
     QString *nombreSiguiente = new QString[tam];
     int z=0;
 
-    rectangulo = new Rectangulo[tam]();
-    Rectangulo *rectanInd[tam];
+    myrectangle = new Myrectangle[tam]();
+    Myrectangle *rectangleInd[tam];
 
     for(int i=0;i<tam;i++){
         z=0;
@@ -239,15 +239,12 @@ void Estructura::vuelos(){
 
     }
 
-    std::cout << "ORDEN DE PINTAR" << std::endl;
-    for(int i=tam-1;i>=0;i--){
+
+    for(int i=0;i<tam;i++){
 
         for(int j = 0;j<numeroAviones;j++){
             QStringList list = avion[j].split(QRegExp(";"),QString::SkipEmptyParts);
             QString *lista = new QString[list.size()];
-
-//            std::cout << "avion[j]: " << avion[j].toStdString() << std::endl;
-
 
             for(int k=1;k<list.size();k++){
 
@@ -272,8 +269,8 @@ void Estructura::vuelos(){
 
 
                     estructura=this;
-                    rectanInd[i]=&rectangulo[i];
-                    rectanInd[i]->datos(tam,numeroAviones,numeroPilotos,fecha,nomVuelo,origen,destino,piloto,hInicio,hFin,avion,tamArchivo,estructura);
+                    rectangleInd[i]=&myrectangle[i];
+                    rectangleInd[i]->datos(tam,numeroAviones,numeroPilotos,fecha,nomVuelo,origen,destino,piloto,hInicio,hFin,avion,tamArchivo,estructura);
 
 //                        SI ESTÁN MUY JUNTOS LOS VUELOS NO SOBREPONER LOS NOMBRES. SOLO SE PINTA EL FINAL
                     if(k>0)
@@ -281,11 +278,13 @@ void Estructura::vuelos(){
 
 
                     if(vCercano==0){
+//                            scene->addText(origen[i])
                         QGraphicsTextItem *ori = new QGraphicsTextItem;
-                        ori->setPos(xRectangle-25,yRectangle-2);
+                        ori->setPos(xRectangle-25,yRectangle-.5);
                         ori->setPlainText(origen[i]);
                         scene->addItem(ori);
                     }
+
 
                     vCercano=0;
                     if(k<list.size()-1)
@@ -293,16 +292,17 @@ void Estructura::vuelos(){
                     int posDes=vCercano+finRectangle+2;
                     QGraphicsTextItem *des = new QGraphicsTextItem;
 
-                    des->setPos(posDes,yRectangle-2);
+                    des->setPos(posDes,yRectangle-.5);
                     des->setPlainText(destino[i]);
+                    QColor textColor(200,0,0);
+                    des->setDefaultTextColor(textColor);
                     scene->addItem(des);
 
-
-                   rectangulo[i].setScene(scene);
-                   rectangulo[i].setPosArray(i);
-                   rectangulo[i].posandscale(xRectangle,yRectangle,tamRectangle,20.5);
-                   rectangulo[i].name_posFligth(lista[k],auxNomPosicion);
-                   scene->addItem(rectanInd[i]);
+                   myrectangle[i].setScene(scene);
+                   myrectangle[i].setPosArray(i);
+                   myrectangle[i].posandscale(xRectangle,yRectangle,tamRectangle,20.5);
+                   myrectangle[i].name_posFligth(lista[k],auxNomPosicion);
+                   scene->addItem(rectangleInd[i]);
 
 //                        SI ESTÁN MUY JUNTOS LOS VUELOS NO SOBREPONER LOS NOMBRES. SOLO SE PINTA EL FINAL
 
@@ -354,6 +354,17 @@ void Estructura::borrarWidget(){
 }
 
 
+
+float Estructura::convertirHora(QString *hora){
+
+    float a = hora->split(":")[0].toFloat();
+    float b = (hora->split(":")[1].toFloat() /100); /*100 conversion, 100 es decimal y 60 es minutos*/
+
+//    10/60=5/3
+    b=b*5/3;
+
+    return (b + a);
+}
 
 int Estructura::vueloCercano(QString vuelo, QString *nombre, float hora1,float horas[]){
     float resta=0;

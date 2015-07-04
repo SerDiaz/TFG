@@ -2,9 +2,10 @@
 #define WRITING_H
 
 #include <QWidget>
+#include "convertirhora.h"
 
 
-class Writing : public QWidget
+class Writing : public QWidget, public ConvertirHora
 {
 public:
     Writing(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, QString *avLista, QStringList avRutSeg, int *avOp, float *ret, int taAr, QWidget *parent = 0);
@@ -56,7 +57,6 @@ private:
 
     int busquedaPosicion(QString vuelo);
     void actionRewritting();
-    QString convertirHoraString(float hora);
     void readingGeneral();
     int busquedaPosicionGeneral(QString vuelo, QString fecha);
 

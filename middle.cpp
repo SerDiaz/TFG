@@ -2,13 +2,12 @@
 
 Middle::Middle()
 {
-    herencia();
 
 }
 
 void Middle::llamaWindow()
 {
-}
 
+}
 
 

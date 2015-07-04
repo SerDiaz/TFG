@@ -4,13 +4,17 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
-//class Middle;
+#include "window.h"
+#include "convertirhora.h"
+class Window;
+class Estructura;
 
+//#include "middle.h"
 
-class Myrectangle : public QGraphicsItem
+class Rectangulo : public QGraphicsItem, public ConvertirHora
 {
 public:
-    Myrectangle();
+    Rectangulo();
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -18,15 +22,16 @@ public:
     void posandscale(qreal x, qreal y, qreal width, qreal height);
     void name_posFligth(QString text,float x);
     void setScene(QGraphicsScene *s);
-
+    void datos(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, int taAr, Estructura *est);
+    void setPosArray(int i);
+    float calculateTime(float pos);
 
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-
     virtual QVariant    itemChange ( GraphicsItemChange change, const QVariant & value );
+
 
 
 private:
@@ -42,7 +47,28 @@ private:
     QString fligth;
     QRectF rec;
 //    Middle *middle;
+    Window *w;
+    QRectF sceneRec;
+    QRectF perimetro;
+    QString retrasoString;
+    float retrasoFloat;
+    int posArray;
 
+    QString fecha;
+    QString *nomVuelo;
+    QString *origen;
+    QString *destino;
+    float *hInicio;
+    float *hFin;
+    QString *piloto;
+    QString *avion;
+
+    int numeroAviones;
+    int numeroPilotos;
+    int tam;
+    int tamArchivo;
+
+    Estructura *estructura;
 };
 
 #endif // MYRECTANGLE_H

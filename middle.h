@@ -1,7 +1,10 @@
 #ifndef MIDDLE_H
 #define MIDDLE_H
 #include <window.h>
-class Middle : public Window
+class Rectangulo;
+class Estructura;
+
+class Middle
 {
 public:
     Middle();

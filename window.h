@@ -11,13 +11,18 @@
 #include <QtGui>
 #include <QGraphicsScene>
 #include "estructura.h"
-//#include "reorden.h"
+#include "reorden.h"
+#include "rectangulo.h"
+#include "convertirhora.h"
 
+
+class Rectangulo;
 class Estructura;
 class Reorden;
+class Middle;
 
 
-class Window : public QWidget
+class Window : public QWidget, public ConvertirHora
 {
     Q_OBJECT
 
@@ -25,27 +30,28 @@ class Window : public QWidget
 public:
     Window(QWidget *parent = 0);
     void cargarDatos();
-    float convertirHora(QString *hora);
-    void herencia();
+    void setDatos(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, int taAr,Estructura *est);
+
+
 
 public slots:
     void probar();
-    void hola();
-    void mostrarEstructura();
     void borrarEstructura();
-    void hola(int i);
     void crearEstructura();
+    void reordenarEstructura(QString nombreVuelo, float retraso);
+
 
 private:
 
-    QVBoxLayout *outerLayout;
+    QVBoxLayout *mainLayout;
     QVBoxLayout *estructraLayout;
-    QHBoxLayout *retrasoLayout;
+    QHBoxLayout *opcionesLayout;
 
     QPushButton *aceptar;
     QPushButton *borrar;
     QPushButton *crear;
     QPushButton *probatura;
+
 
 
     QString fecha;
@@ -83,10 +89,12 @@ private:
     QAction *addAct;
     QAction *editAct;
     QAction *removeAct;
+    bool crearPress;
 
     QLineEdit *retrasoEdit;
     QLineEdit *avionEdit;
     QString fileOpened;
+
 
 
     QGraphicsScene *scene;
