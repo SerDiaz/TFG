@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QDialog>
+#include "reescritura.h"
 
 
 
@@ -18,7 +19,7 @@ class QSpinBox;
 class QGroupBox;
 class QStandardItemModel;
 class QTextEdit;
-class Writing;
+class Reescritura;
 
 
 class Reorden : public QWidget
@@ -27,26 +28,22 @@ class Reorden : public QWidget
 
 public:
     Reorden(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, int taAr, QWidget *parent = 0);
-    void crear(QVBoxLayout *layoutGeneral);
-//    void algoritmo(QString vuelo,float retraso);
+    void algoritmo(QString vuelo,float retraso);
     int busquedaPosicion(QString vuelo);
     QString busquedaVueloPilotoSiguiente(QString vuelo);
     QString busquedaVueloAvionSiguiente(QString vuelo);
-    void createHorizontalGroupBox();
-    void menu(QHBoxLayout *layout);
     void busquedaPilotoSustitucion(int posicionActual, int idCaminoPadre);
     void busquedaAvionSustitucion(int posicionActual, int idCaminoPadre);
     void busquedaPilotoYAvionSustitucion(int posicionActual,int idCaminoPadre);
     void retrasarAviones(int posicionActual, int idCaminoPadre);
+    void cancelar(int posicionActual, int idCaminoPadre);
     bool pilotoPuedeVolver(int posicionActual,int posicionDondeVa);
     bool avionPuedeVolver(int posicionActual,int posicionDondeVa);
-    bool puedeVolverMasRetraso(int posicionActual,int posicionDondeVa, float retraso);
     int sePuedeCancelar(int posicionActual,int posicionDondeVa);
 
 
 public slots:
-    void sloto();
-    void algoritmo(QString vuelo, float retraso);
+//    void algoritmo(QString vuelo, float retraso);
 
 
 
@@ -58,15 +55,17 @@ private:
     int caminosComprobados;
     int numeroDeElementosEnListaAbierta;
     int numeroDeElementosEnListaCerrada;
-    int *costF;
-    int *costeG;
-    QStringList *avionesRutaSeguida;
-    QString *avionesLista;
+    float *costF;
+    QStringList *vuelosRutaSeguida;
+    QString *vuelosLista;
 
-    int *tiposOperacion;
-    int *avionOperacion;
+    int *tipoOperacion;
+    int *vueloOperacion;
     int *listaDondeEsta;
 
+    bool *dosReordenamientos;
+    unsigned *dosReordenamientosElementoForaneo;
+    unsigned *dosReordenamientosPrimerElemento;
 
     float retraso;
 
@@ -96,18 +95,18 @@ private:
 //    float *hFinAvionUsado;
 //    int numAvionesUsados;
 
-    Writing *writing;
+    Reescritura *writing;
 
 
 
     void algoritmoComun(QString vueloPadre, QString vueloHijo);
-    void insertarListaAbierta(QString vuelo, int i, int posVueloAnterior);
+    void insertarListaAbierta(QString vuelo, int operacion, int posVueloAnterior, int dosRutasReorden);
     int borrarListaAbierta(int devolver);
     void nuevoEnListaCerrada(QString vuelo, QString vueloAnterior, int idCaminoPadre);
     void insertarListaCerrada(int id);
-    int devolverCostF(int posicion);
-    void insertarCostF(int posicion, int coste);
-    void insertar3enLista(QString vuelo, int operacionAnterior, QString vueloAnterior);
+    float devolverCostF(int posicion);
+    void insertarCostF(int posicion, float coste);
+    void insertar3enLista(QString vueloAnterior, int operacionAnterior, QString vuelo, int dosRutasReorden);
     int buscarVuelo(QString vuelo,int operacionAnterior);
 //    void sustituirAbierta(int id1,int id2);
 //    void sustituirCerrada(int id1,int id2);
@@ -119,7 +118,8 @@ private:
     void colocarAscendenteCerrada(int pos);
     void insertarRutaSeguida(int posVueloAnterior);
     void calcularRetraso(int posVueloAnterior, int posActual, int posAnterior);
-
+    int hayMasVuelosAfectados(int posActual);
+    QStringList buscarOtraRutaSeguida();
 
 
 

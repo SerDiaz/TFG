@@ -16,20 +16,16 @@ SOURCES += main.cpp\
         window.cpp \
     estructura.cpp \
     reorden.cpp \
-    reading.cpp \
-    writing.cpp \
-    middle.cpp \
     convertirhora.cpp \
-    rectangulo.cpp
+    rectangulo.cpp \
+    reescritura.cpp
 
 HEADERS  += window.h \
     estructura.h \
     reorden.h \
-    reading.h \
-    writing.h \
-    middle.h \
     convertirhora.h \
-    rectangulo.h
+    rectangulo.h \
+    reescritura.h
 
 FORMS    += window.ui
 

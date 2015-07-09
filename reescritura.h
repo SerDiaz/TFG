@@ -5,10 +5,10 @@
 #include "convertirhora.h"
 
 
-class Writing : public QWidget, public ConvertirHora
+class Reescritura : public QWidget, public ConvertirHora
 {
 public:
-    Writing(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, QString *avLista, QStringList avRutSeg, int *avOp, float *ret, int taAr, QWidget *parent = 0);
+    Reescritura(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, QString *avLista, QStringList avRutSeg, int *avOp, float *ret, int taAr, QWidget *parent = 0);
     void rewriting();
 private:
     //TODOS LOS DATOS RECOGIDOS ANTERIORMENTE PARA ESCRIBIR UN ARCHIVO

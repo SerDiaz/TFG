@@ -54,6 +54,7 @@ void Estructura::crear(QVBoxLayout *layoutGeneral){
     aviones();
     layoutGeneral->addLayout(avionesLayout);
 
+    std::cout << "ORDEN DE PINTAR 4" << std::endl;
 
 }
 
@@ -173,6 +174,7 @@ void Estructura::vuelos(){
     QString *nombreSiguiente = new QString[tam];
     int z=0;
 
+
     rectangulo = new Rectangulo[tam]();
     Rectangulo *rectanInd[tam];
 
@@ -274,7 +276,6 @@ void Estructura::vuelos(){
                     estructura=this;
                     rectanInd[i]=&rectangulo[i];
                     rectanInd[i]->datos(tam,numeroAviones,numeroPilotos,fecha,nomVuelo,origen,destino,piloto,hInicio,hFin,avion,tamArchivo,estructura);
-
 //                        SI ESTÁN MUY JUNTOS LOS VUELOS NO SOBREPONER LOS NOMBRES. SOLO SE PINTA EL FINAL
                     if(k>0)
                         vCercano = vueloCercano(lista[k-1],nomVuelo,hInicio[i],hFin);
@@ -312,8 +313,7 @@ void Estructura::vuelos(){
     }
 
 
-
-
+    std::cout << "PINTADO" << std::endl;
 
     vuelosHoraLayout->addWidget(view);
 
@@ -341,6 +341,7 @@ void Estructura::borrarWidget(){
 
     delete vuelosHoraLayout;
     vuelosHoraLayout = new QVBoxLayout();
+    std::cout << "SE HA CREADO VIEW" << std::endl;
 
 //    QWidget* stepchild;
 //    stepchild=horasLayout->widget();

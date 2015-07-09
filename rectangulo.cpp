@@ -38,7 +38,6 @@ void Rectangulo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
         painter->fillRect(rec,brush);
         painter->drawRect(rec);
-        QString hola="hola";
 
         float posTime=posX;
         float posXCurrentMap=posXCurrent+posX;
@@ -69,16 +68,9 @@ void Rectangulo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         painter->fillRect(rec,brush);
         painter->drawRect(rec);
         painter->drawText((posX+(tamWidth/posText)),posY+3.5,30,30,0,fligth);
+        retrasoFloat=0;
 
     }
-
-
-
-
-
-
-
-
 
 }
 
@@ -113,6 +105,7 @@ void Rectangulo::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         w->setDatos(tam,numeroAviones,numeroPilotos,fecha,nomVuelo,origen,destino,piloto,hInicio,hFin,avion,tamArchivo,estructura);
         w->reordenarEstructura(nomVuelo[posArray],retrasoFloat);
     }
+    std::cout << "PASO TODO VUELO A RECTANGULO" << std::endl;
 
 
 }

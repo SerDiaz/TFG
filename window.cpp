@@ -32,6 +32,8 @@ Window::Window(QWidget *parent)
 
     std::cout << "Constructor estructura" << std::endl;
 
+    std::cout << "ORDEN DE PINTAR 5" << std::endl;
+
 //*******************
 // DESCOMENTAR PARA QUE SE VEA TODO
 //*******************
@@ -46,6 +48,7 @@ Window::Window(QWidget *parent)
 
 //    reorden = new Reorden(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto,horarioInicio,horarioFin,avion,tamArchivo);
 
+    std::cout << "ORDEN DE PINTAR 6" << std::endl;
 
 
     QHBoxLayout *formulario = new QHBoxLayout();
@@ -129,6 +132,8 @@ void Window::reordenarEstructura(QString nombreVuelo, float retraso)
     reorden->algoritmo(nombreVuelo,retraso);
     borrarEstructura();
     crearEstructura();
+    std::cout << "PASO REORDEN" << std::endl;
+
 }
 
 
@@ -142,8 +147,14 @@ void Window::crearEstructura(){
     crear->hide();
     borrar->show();
 
+    std::cout << "PASA CREAR BOTONES " << std::endl;
+
+
     estructura->asignar(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto, horarioInicio, horarioFin, avion,tamArchivo,estructura);
     estructura->pintarVuelos();
+
+    std::cout << "PASA CREAR" << std::endl;
+
 
 }
 
@@ -153,7 +164,12 @@ void Window::borrarEstructura(){
     crear->show();
     borrar->hide();
 
+    std::cout << "PASA BORRAR BOTONES " << std::endl;
+
     estructura->borrarWidget();
+
+    std::cout << "PASA BORRAR " << std::endl;
+
 
 
 }
@@ -288,6 +304,7 @@ void Window::cargarDatos(){
         }
          salida.close();
 
+         std::cout << "AQUI" << std::endl;
 
 
 }
