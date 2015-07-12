@@ -35,7 +35,6 @@ public:
 
 
 public slots:
-    void probar();
     void borrarEstructura();
     void crearEstructura();
     void reordenarEstructura(QString nombreVuelo, float retraso);
@@ -101,7 +100,6 @@ private:
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
 private slots:
-    void updateActions(const QItemSelection &selection);
     void openFile();
     void saveFile();
 

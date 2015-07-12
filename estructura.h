@@ -33,11 +33,6 @@ public:
     void vuelos();
     void pintarVuelos();
     void borrarWidget();
-    void mostrarWidget();
-
-    QString getFecha();
-    int getTamano();
-    void herencia();
 
 private:
     QHBoxLayout *horasLayout;

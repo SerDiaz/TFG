@@ -54,7 +54,6 @@ void Estructura::crear(QVBoxLayout *layoutGeneral){
     aviones();
     layoutGeneral->addLayout(avionesLayout);
 
-    std::cout << "ORDEN DE PINTAR 4" << std::endl;
 
 }
 
@@ -67,7 +66,6 @@ void Estructura::horarios(){
 
 //    Creando Labels
     nameLabel = new QLabel(tr("Horas:"));
-//    QLabel *hora[numeroHoras];
 
 
     for (int i = 0; i < numeroHoras; i++){
@@ -114,13 +112,8 @@ void Estructura::aviones(){
         for (int i = 1; i < numeroAviones; i++){
            avion[i] = new QLabel(this);
            avion[i]->setText( tr("Avión %1").arg(i+1) );
-//           avion[i]->setStyleSheet("QLabel { background-color : red; color : blue; }");
            aviones->addWidget(avion[i]);
         }
-
-//        int a;
-//        a=avion[1]->height();
-//        std::cout << "Ancho .del avion " << a << std::endl;
 
         aviones->addSpacing(5);
 
@@ -215,9 +208,6 @@ void Estructura::vuelos(){
         if(ult==0)
             posicionSiguiente = buscarPosicion(listaPi[i+1],nombreSiguiente);
 
-//            std::cout<< i << ", " << listaPi[i] << " ,posicion" << posicion << " ,posicionSiguiente" << posicionSiguiente <<std::endl;
-
-
         float xRectangle1;
         float yRectangle1;
         float xRectangle2;
@@ -241,15 +231,11 @@ void Estructura::vuelos(){
 
     }
 
-    std::cout << "ORDEN DE PINTAR" << std::endl;
     for(int i=tam-1;i>=0;i--){
 
         for(int j = 0;j<numeroAviones;j++){
             QStringList list = avion[j].split(QRegExp(";"),QString::SkipEmptyParts);
             QString *lista = new QString[list.size()];
-
-//            std::cout << "avion[j]: " << avion[j].toStdString() << std::endl;
-
 
             for(int k=1;k<list.size();k++){
 
@@ -313,45 +299,17 @@ void Estructura::vuelos(){
     }
 
 
-    std::cout << "PINTADO" << std::endl;
-
     vuelosHoraLayout->addWidget(view);
 
 
 }
 
-void Estructura::mostrarWidget(){
-    view->show();
-//    for(int i= 0; i < numeroHoras; i++)
-//    {
-//       hora[i]->show();
-//    }
-}
+
 
 void Estructura::borrarWidget(){
-//    vuelosHoraLayout->removeWidget(label);
-//    vuelosHoraLayout->removeWidget(label);
-
     view->hide();
-//    horasLayout->removeWidget(nameLabel);
-//    for(int i= 0; i < numeroHoras; i++)
-//    {
-//       hora[i]->hide();
-//    }
-
     delete vuelosHoraLayout;
     vuelosHoraLayout = new QVBoxLayout();
-    std::cout << "SE HA CREADO VIEW" << std::endl;
-
-//    QWidget* stepchild;
-//    stepchild=horasLayout->widget();
-//    delete stepchild;
-
-
- //    update();
-
-//    pintarVuelos();
-
 }
 
 
@@ -437,7 +395,4 @@ bool Estructura::ultimo(int i){
     return 0;
 }
 
-void Estructura::herencia(){
-    std::cout << "HERENCA" << std::endl;
-}
 

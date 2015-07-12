@@ -18,56 +18,33 @@ Window::Window(QWidget *parent)
 {
 
 
-//    this->setFixedWidth(1202);
+//    TAMAÑO FIJO
     this->setFixedWidth(1350);
     this->setFixedHeight(485);
 
 //    cargarDatos();
     createMenus();
 
+//    CREAR LAYOUT PRINCIPAL
     mainLayout = new QVBoxLayout(this);
 
-    std::cout << "outerLayout" << std::endl;
     estructura=new Estructura();
-
-    std::cout << "Constructor estructura" << std::endl;
-
-    std::cout << "ORDEN DE PINTAR 5" << std::endl;
-
-//*******************
-// DESCOMENTAR PARA QUE SE VEA TODO
-//*******************
     estructura->crear(mainLayout);
-
-    std::cout << "Se crea estructura" << std::endl;
-
-
-
-//        QString av=tr("8414");
-//    QString av=tr("8134");
-
-//    reorden = new Reorden(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto,horarioInicio,horarioFin,avion,tamArchivo);
-
-    std::cout << "ORDEN DE PINTAR 6" << std::endl;
-
 
     QHBoxLayout *formulario = new QHBoxLayout();
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
 
+//    BOTONES DE CREAR Y BORRRAR
     borrar = new QPushButton(tr("borrar"));
     crear = new QPushButton(tr("crear"));
-//    probatura = new QPushButton(tr("probar"));
     QPushButton *cerrar = new QPushButton(tr("cerrar"));
 
-
-
-
+//    CREAR LAYOUT DE OPCIONES
     opcionesLayout = new QHBoxLayout;
 
     opcionesLayout->addWidget(borrar);
     opcionesLayout->addWidget(crear);
     opcionesLayout->addWidget(cerrar);
-//    retrasoLayout->addWidget(probatura);
     crear->hide();
     borrar->hide();
     crearPress=0;     //PERMITE AL OPENFILE COMPROBAR QUE HA SIDO LA PRIMERA VEZ QUE ES USADO
@@ -77,9 +54,6 @@ Window::Window(QWidget *parent)
     connect(cerrar, SIGNAL(clicked()), this, SLOT(close()));
     connect(borrar, SIGNAL(clicked()), this, SLOT(borrarEstructura()));
     connect(crear, SIGNAL(clicked()), this, SLOT(crearEstructura()));
-//    connect(probatura, SIGNAL(clicked()), this, SLOT(probar()));
-
-
 
 
     formulario->addWidget(buttonBox);
@@ -91,16 +65,6 @@ Window::Window(QWidget *parent)
 
 
    setWindowTitle(tr("TFG"));
-}
-
-
-void Window::probar(){
-    cargarDatos();
-
-
-  std::cout << "fileOpened: " << fileOpened.toStdString() << std::endl;
-
-
 }
 
 
@@ -126,35 +90,21 @@ void Window::setDatos(int ta, int nav, int npi, QString fe, QString *noV, QStrin
 void Window::reordenarEstructura(QString nombreVuelo, float retraso)
 {
 
-    std::cout << "reordanEstructura*******************" << std::endl;
-    std::cout << "tamArchivo: " << tamArchivo << std::endl;
     reorden = new Reorden(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto,horarioInicio,horarioFin,avion,tamArchivo);
     reorden->algoritmo(nombreVuelo,retraso);
     borrarEstructura();
     crearEstructura();
-    std::cout << "PASO REORDEN" << std::endl;
-
 }
 
 
 void Window::crearEstructura(){
-    crearPress=1;
-
-    std::cout << "Crear estructura " << std::endl;
-
-
+    crearPress=1; // CUANDO CARGUE POR FICHERO ARCHIVOS NO MUESTRE EL BOTÓN CREAR AUTOMÁTICAMENTE
 
     crear->hide();
     borrar->show();
 
-    std::cout << "PASA CREAR BOTONES " << std::endl;
-
-
     estructura->asignar(numVuelos,nAviones,nPilotos,fecha,nombre,nomA,nomB,piloto, horarioInicio, horarioFin, avion,tamArchivo,estructura);
     estructura->pintarVuelos();
-
-    std::cout << "PASA CREAR" << std::endl;
-
 
 }
 
@@ -164,13 +114,7 @@ void Window::borrarEstructura(){
     crear->show();
     borrar->hide();
 
-    std::cout << "PASA BORRAR BOTONES " << std::endl;
-
     estructura->borrarWidget();
-
-    std::cout << "PASA BORRAR " << std::endl;
-
-
 
 }
 
@@ -227,8 +171,6 @@ void Window::cargarDatos(){
         if(aux2==fecha){
             text_stream_for_reading >> aux;
             text_stream_for_reading >> nombre[z];
-//            if(nombre[z] == tr("107"))
-//                std::cout << "z: " << z << " avion: " << nombre[z].toStdString() << std::endl;
             text_stream_for_reading >> nomA[z];
             text_stream_for_reading >> nomB[z];
             text_stream_for_reading >> aux;
@@ -250,10 +192,10 @@ void Window::cargarDatos(){
 
 
         file_for_reading.close();
-////        ************************************
+        
+//        READING EL OTRO ARCHIVO
 
 
-//        QFile salida(fileOpened);
         QFile salida("salida05_04_2012.txt");
 
         salida.open(QIODevice::ReadOnly);
@@ -303,10 +245,6 @@ void Window::cargarDatos(){
 
         }
          salida.close();
-
-         std::cout << "AQUI" << std::endl;
-
-
 }
 
 
@@ -314,7 +252,6 @@ void Window::createMenus()
 {
     menuBar = new QMenuBar;
 
-    std::cout << "hola" << std::endl;
     fileMenu = new QMenu(tr("&Archivo"), this);
     menuBar->addMenu(fileMenu);
 
@@ -334,11 +271,6 @@ void Window::createMenus()
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
 
-//    toolMenu = new QMenu(tr("&Tools"), this);
-//    menuBar->addMenu(toolMenu);
-
-    std::cout << "Acabo crear menu" << std::endl;
-
 
 }
 
@@ -352,12 +284,9 @@ void Window::openFile()
                 ,tr("Open File"),"",
                 "All files(*.*);;Text File(*.txt)"
                 );
-//    QMessageBox::information(this,tr("Nombre del Archivo"),fileOpened);
 
-    std::cout << fileOpened.toStdString() << std::endl;
     if(fileOpened!=""){
         cargarDatos();
-        std::cout << "fileOpened: " << fileOpened.toStdString() << std::endl;
         if(crearPress==0)
             crear->show();
     }
@@ -366,19 +295,7 @@ void Window::openFile()
 void Window::saveFile()
 {
     QString fileName = QFileDialog::getSaveFileName(this);
-//    if (!fileName.isEmpty())
-//        addressWidget->writeToFile(fileName);
+
 }
 
-void Window::updateActions(const QItemSelection &selection)
-{
-//    QModelIndexList indexes = selection.indexes();
 
-//    if (!indexes.isEmpty()) {
-//        removeAct->setEnabled(true);
-//        editAct->setEnabled(true);
-//    } else {
-//        removeAct->setEnabled(false);
-//        editAct->setEnabled(false);
-//    }
-}

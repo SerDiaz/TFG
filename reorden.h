@@ -99,7 +99,7 @@ private:
 
 
 
-    void algoritmoComun(QString vueloPadre, QString vueloHijo);
+    void algoritmoComun();
     void insertarListaAbierta(QString vuelo, int operacion, int posVueloAnterior, int dosRutasReorden);
     int borrarListaAbierta(int devolver);
     void nuevoEnListaCerrada(QString vuelo, QString vueloAnterior, int idCaminoPadre);

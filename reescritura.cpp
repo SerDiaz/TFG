@@ -42,25 +42,16 @@ Reescritura::Reescritura(int ta, int nav, int npi, QString fe, QString *noV, QSt
 
 void Reescritura::rewriting(){
     readingGeneral();
-    std::cout << "Rewritting, size: " << avionesRutaSeguida.size() << std::endl;
-
     tamCambiado=avionesRutaSeguida.size();
-    std::cout << "tamCambiado: " << tamCambiado << std::endl;
-
     int auxInt;
     if(tamCambiado!=0){
         auxInt=avionesRutaSeguida.at(tamCambiado-1).toLocal8Bit().toInt();
     }
-    std::cout << "aux: " << auxInt << std::endl;
-    std::cout << "Aviones Lista: " << avionesLista[auxInt].toStdString() << std::endl;
-
 
 //    SI ES SOLO RETRASAR AVION LA ULTIMA LÍNEA NO HARÁ FALTA
     if(avionOperacion[auxInt]==10)
         tamCambiado--;
 
-    std::cout << "tamCambiado2: " << tamCambiado << ", " <<
-                 avionOperacion[auxInt] << std::endl;
 
     posicionCambioDia=new int[tamCambiado];
     posicionCambioGeneral=new int[tamCambiado];
@@ -83,47 +74,27 @@ void Reescritura::rewriting(){
 
           z++;
 
-          std::cout << "fecha: " << fecha.toStdString() << std::endl;
-          std::cout << "posicionCambioGeneral[z]: " << posicionCambioGeneral[z] << std::endl;
-
-          std::cout << "avionOperacion[posicion]" << avionesLista[posicion].toStdString() << std::endl;
-          std::cout << "avionOperacion[posicion]" << avionOperacion[posicion] << std::endl;
-
-//                 std::cout << avionesRutaSeguida[listaCerrada[i]].at(j).toLocal8Bit().constData() << std::endl;
-
           switch (avionOperacion[posicion]) {
               case 0:{
-                std::cout << "*********WRITING 0********************"<< std::endl;
-                std::cout << posicion << ". avion '" << avionesLista[posicion].toStdString()
-                        << "', Hora Inicio de este avion '" << hInicio[posicionDia]
-                           << "' y operacion '" << avionOperacion[posicion] << "'" << std::endl;
                 hInicio[posicionDia]=hInicio[posicionDia]+retraso[posicion];
                 hFin[posicionDia]=hFin[posicionDia]+retraso[posicion];
-                std::cout << posicion << ". avion  '" << avionesLista[posicion].toStdString()
-                          << "', Hora Inicio de este avion '" << hInicio[posicionDia]
-                             << "' y operacion '" << avionOperacion[posicion] << "'" << std::endl;
               }break;
               case 1:{
-                std::cout << "*********WRITING 1********************"<< std::endl;
                 pilotoCambiado=busquedaPiloto(avionesLista[posicion]);
                 borrarVueloPiloto(avionesLista[posicion],pilotoCambiado);
                 avionCambiado=busquedaAvion(avionesLista[posicion]);
                 borrarVueloAvion(avionesLista[posicion],avionCambiado);
               }break;
               case 2:{
-                std::cout << "*********WRITING 2********************"<< std::endl;
                 pilotoCambiado=busquedaPiloto(avionesLista[posicion]);
                 borrarVueloPiloto(avionesLista[posicion],pilotoCambiado);
               }break;
 
               case 3:{
-                std::cout << "*********WRITING 3********************"<< std::endl;
                 avionCambiado=busquedaAvion(avionesLista[posicion]);
                 borrarVueloAvion(avionesLista[posicion],avionCambiado);
               }break;
               case 4:{
-                std::cout << "*********WRITING 4********************"<< std::endl;
-
                 pilotoCambiado=busquedaPiloto(avionesLista[posicion]);
                 borrarVueloPiloto(avionesLista[posicion],pilotoCambiado);
                 avionCambiado=busquedaAvion(avionesLista[posicion]);
@@ -132,7 +103,6 @@ void Reescritura::rewriting(){
 
               }break;
               case 11:{
-                std::cout <<"*********WRITING 11********************"<< std::endl;
                 int pi=busquedaPiloto(avionesLista[posicion]);
                 insertarVueloPiloto(avionesLista[posicionAnterior],pi);
                 int av=busquedaAvion(avionesLista[posicion]);
@@ -140,29 +110,18 @@ void Reescritura::rewriting(){
 
               }break;
               case 12:{
-                std::cout <<"*********WRITING 12********************"<< std::endl;
                 int pi=busquedaPiloto(avionesLista[posicion]);
                 insertarVueloPiloto(avionesLista[posicionAnterior],pi);
               }break;
               case 13:{
-                std::cout <<"*********WRITING 13********************"<< std::endl;
                 int av=busquedaAvion(avionesLista[posicion]);
                 insertarVueloAvion(avionesLista[posicionAnterior],av);
               }break;
-              case 14:{
-                std::cout <<"*********WRITING 14********************"<< std::endl;
-                std::cout <<"*********NADA********************"<< std::endl;
 
-              }break;
-              case 15:{
-                std::cout <<"*********WRITING 15********************"<< std::endl;
-                std::cout <<"*********NADA********************"<< std::endl;
-
-              }break;
+              //EN LOS DEMÁS CASOS QUE ENCUENTRE NO HACE NADA
           }
           posicionAnterior=posicion;
     }
-    std::cout << "AHORA A GUARDAR" << std::endl;
     actionRewritting();
     rewrittingPilotoAvion();
 
@@ -179,43 +138,19 @@ int Reescritura::busquedaPosicion(QString vuelo){
 
 
 void Reescritura::actionRewritting(){
-    std::cout << "VAMOS A GUARDAR" << std::endl;
     QFile file_for_writing("vuelosAbrilModificado.txt");
     file_for_writing.open(QIODevice::WriteOnly | QIODevice::Truncate); //
     QTextStream text_stream_for_writing(&file_for_writing);
 
-    std::cout << "actionRewritting******************" << std::endl;
-    std::cout << "tamArchivo: " << tamArchivo << std::endl;
-
-
-
 
 //        TODAS LAS POSICIONES QUE REQUIERAN ACTUALIZAR SUS DATOS SON LAS GUARDADAS EN POSICION CAMBIO
-        for(int i=0; i < tamCambiado; i++){
-            if(operacionCambioDia[i]==0){
-                std::cout << "i: " << i << std::endl;
-                std::cout << "posicionCambioDia: " << posicionCambioDia[i] << std::endl;
-                std::cout << "posicionCambioGeneral: " << posicionCambioGeneral[i] << std::endl;
-
-
-                std::cout << "nomVuelo[posicionCambioDia[i]]: " << nomVuelo[posicionCambioDia[i]].toStdString() << std::endl;
-                std::cout << "nombre[posicionCambioGeneral[i]]: " << nombre[posicionCambioGeneral[i]].toStdString() << std::endl;
-
-                std::cout << "horarioInicio[posicionCambioGeneral[i]]: " << horarioInicio[posicionCambioGeneral[i]].toStdString() << std::endl;
-                std::cout << "horarioFin[posicionCambioGeneral[i]]: " << horarioFin[posicionCambioGeneral[i]].toStdString() << std::endl;
-                std::cout << "hInicio[posicionCambioDia[i]]: " << hInicio[posicionCambioDia[i]] << std::endl;
-                std::cout << "hFin[posicionCambioDia[i]]: " << hFin[posicionCambioDia[i]] << std::endl;
-
-                nombre[posicionCambioGeneral[i]]=nomVuelo[posicionCambioDia[i]];
-                horarioInicio[posicionCambioGeneral[i]]=aString(hInicio[posicionCambioDia[i]]);;
-                horarioFin[posicionCambioGeneral[i]]=aString(hFin[posicionCambioDia[i]]);
-
-                std::cout << "horarioInicio[posicionCambioGeneral[i]]: " << horarioInicio[posicionCambioGeneral[i]].toStdString() << std::endl;
-                std::cout << "horarioFin[posicionCambioGeneral[i]]: " << horarioFin[posicionCambioGeneral[i]].toStdString() << std::endl;
-
-            }
-
+    for(int i=0; i < tamCambiado; i++){
+        if(operacionCambioDia[i]==0){
+            nombre[posicionCambioGeneral[i]]=nomVuelo[posicionCambioDia[i]];
+            horarioInicio[posicionCambioGeneral[i]]=aString(hInicio[posicionCambioDia[i]]);;
+            horarioFin[posicionCambioGeneral[i]]=aString(hFin[posicionCambioDia[i]]);
         }
+    }
 
         QString espacio = tr(" ");
         QString salto = tr("\r\n");
@@ -265,7 +200,6 @@ void Reescritura::rewrittingPilotoAvion(){
         PilotoAvion >> aux;
     file_for_PilotoAvion.close();
 
-    std::cout << "GUARDAR ACHIVO ESPECIFICO DIA:" << archivo.toStdString() << std::endl;
     QFile file_for_writing(archivo);
     file_for_writing.open(QIODevice::WriteOnly | QIODevice::Truncate); //
     QTextStream text_stream_for_writing(&file_for_writing);
@@ -317,9 +251,6 @@ void Reescritura::readingGeneral(){
         QFile file_for_readingGeneral("vuelosabril12.txt");
         file_for_readingGeneral.open(QIODevice::ReadOnly);
         QTextStream text_stream_for_readingGeneral(&file_for_readingGeneral);
-
-        std::cout << "readingGeneral*********" << std::endl;
-        std::cout << "tamArchivo: " << tamArchivo << std::endl;
 
         date=new QString[tamArchivo];
         nombre=new QString[tamArchivo];
@@ -389,9 +320,6 @@ void Reescritura::borrarVueloAvion(QString vuelo, int av){
 }
 
 void Reescritura::borrarVueloPiloto(QString vuelo, int pi){
-    std::cout <<  "piloto[pi] INICIO " << piloto[pi].toStdString() << std::endl;
-    std::cout <<  "vuelo a borrar" <<  vuelo.toStdString() << std::endl;
-
 
     QStringList list = piloto[pi].split(";",QString::SkipEmptyParts);
     QString *lista = new QString[list.size()];
@@ -402,23 +330,13 @@ void Reescritura::borrarVueloPiloto(QString vuelo, int pi){
 
         if(lista[k]!=vuelo){
             pilotoNew = pilotoNew + lista[k] + ";" ;
-            std::cout <<   "lista[k] " << lista[k].toStdString() << std::endl;
-            std::cout <<   "PILOTO. DENTRO DEL FOR " << pilotoNew.toStdString() << std::endl;
+
         }
     }
     piloto[pi]=pilotoNew;
-    std::cout << "piloto[pi] FINAL "<< piloto[pi].toStdString() << std::endl;
-
 }
 
 void Reescritura::insertarVueloAvion(QString vuelo, int av){
-    std::cout << "INSERTAR VUELO AVION " << std::endl;
-    std::cout << "av " << av << std::endl;
-    std::cout << "vuelo " << vuelo.toStdString() << std::endl;
-
-    std::cout << "avion[av] " << avion[av].toStdString() << std::endl;
-
-
     QStringList list = avion[av].split(";",QString::SkipEmptyParts);
     QString *lista = new QString[list.size()];
     QString avionNew=(tr(list.at(0).toLocal8Bit().constData()))+";";
@@ -437,12 +355,6 @@ void Reescritura::insertarVueloAvion(QString vuelo, int av){
             posListaSiguiente=tam-2;
         }
 
-        std::cout << "vuelo del bucle " << nomVuelo[posListaActual].toStdString() <<std::endl;
-        std::cout << "hInicio[posListaActual] " << hInicio[posListaActual] <<std::endl;
-        std::cout << "hInicio[posVuelo] " << hInicio[posVuelo] <<std::endl;
-        std::cout << "vuelo de posListaSiguiente " << nomVuelo[posListaSiguiente].toStdString() <<std::endl;
-        std::cout << "hInicio[posListaSiguiente] " << hInicio[posListaSiguiente] <<std::endl;
-
         if(hInicio[posVuelo]<hInicio[posListaActual] && avionNew=="")
             avionNew = vuelo + ";";
 
@@ -450,18 +362,13 @@ void Reescritura::insertarVueloAvion(QString vuelo, int av){
 
         if(hInicio[posVuelo]>hInicio[posListaActual] && hInicio[posVuelo]<hInicio[posListaSiguiente]){
             avionNew = avionNew + vuelo + ";";
-            std::cout << "ENTRO y CAMBIO" <<std::endl;
         }
     }
     avion[av]=avionNew;
-    std::cout << "avion[av] FINAL "<< avion[av].toStdString() << std::endl;
 
 }
 
 void Reescritura::insertarVueloPiloto(QString vuelo, int pi){
-    std::cout << "INSERTAR PILOTO AVION " << std::endl;
-    std::cout << "piloto[pi] " << piloto[pi].toStdString()<<std::endl;
-
 
     QStringList list = piloto[pi].split(";",QString::SkipEmptyParts);
     QString *lista = new QString[list.size()];
@@ -480,12 +387,6 @@ void Reescritura::insertarVueloPiloto(QString vuelo, int pi){
             posListaSiguiente=tam-2;
         }
 
-        std::cout << "vuelo del bucle " << nomVuelo[posListaActual].toStdString() <<std::endl;
-        std::cout << "hInicio[posListaActual] " << hInicio[posListaActual] <<std::endl;
-        std::cout << "hInicio[posVuelo] " << hInicio[posVuelo] <<std::endl;
-        std::cout << "vuelo de posListaSiguiente " << nomVuelo[posListaSiguiente].toStdString() <<std::endl;
-        std::cout << "hInicio[posListaSiguiente] " << hInicio[posListaSiguiente] <<std::endl;
-
         if(hInicio[posVuelo]<hInicio[posListaActual] && pilotoNew=="")
             pilotoNew = vuelo + ";";
 
@@ -493,34 +394,20 @@ void Reescritura::insertarVueloPiloto(QString vuelo, int pi){
 
         if(hInicio[posVuelo]>hInicio[posListaActual] && hInicio[posVuelo]<hInicio[posListaSiguiente]){
             pilotoNew = pilotoNew + vuelo + ";";
-            std::cout << "ENTRO y CAMBIO" <<std::endl;
         }
     }
     piloto[pi]=pilotoNew;
-    std::cout << "piloto[pi] FINAL "<< piloto[pi].toStdString() << std::endl;
 
 }
 
 int Reescritura::busquedaPosicionGeneral(QString vuelo, QString fecha){
-    std::cout << "busquedaPosicionGeneral******************"<< std::endl;
-    std::cout << "vuelo: "<< vuelo.toStdString() << std::endl;
-    std::cout << "fecha: "<< fecha.toStdString() << std::endl;
-    std::cout << "tamArchivo: "<< tamArchivo << std::endl;
-
-
-//    std::cout << "nombre[3]: "<< nombre[3].toStdString() << std::endl;
-//    std::cout << "date[3]: "<< date[3].toStdString() << std::endl;
-
-
-
     for (int i=0; i<tamArchivo;i++){
 
         if(date[i]==fecha && nombre[i]==vuelo)
             return i;
-
     }
-    return -1;
 
+    return -1;
 }
 
 
