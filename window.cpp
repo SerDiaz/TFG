@@ -122,7 +122,17 @@ void Window::borrarEstructura(){
 void Window::cargarDatos(){
     QString aux;
 
-    //Lectura
+    // GUARDAR EL DÍA QUE ESTAMOS BUSCANDO
+    QFile paraFecha(fileOpened);
+    paraFecha.open(QIODevice::ReadOnly);
+    QTextStream texto(&paraFecha);
+
+    texto >> fecha;
+
+    paraFecha.close();
+
+
+    // BUSCAR DATOS DE LOS VUELOS DEL DíA EN CONCRETO
     QFile file_for_reading("vuelosabril12.txt");
     file_for_reading.open(QIODevice::ReadOnly);
     QTextStream text_stream_for_reading(&file_for_reading);
@@ -133,7 +143,7 @@ void Window::cargarDatos(){
     QString auxFecha=aux;
     int tam=0;
     numVuelos=0;
-    fecha="05/04/2012";
+//    fecha="05/04/2012";
     while (aux!=0){
         text_stream_for_reading >> aux;
         text_stream_for_reading >> aux;
@@ -171,6 +181,8 @@ void Window::cargarDatos(){
         if(aux2==fecha){
             text_stream_for_reading >> aux;
             text_stream_for_reading >> nombre[z];
+//            if(nombre[z] == tr("107"))
+//                std::cout << "z: " << z << " avion: " << nombre[z].toStdString() << std::endl;
             text_stream_for_reading >> nomA[z];
             text_stream_for_reading >> nomB[z];
             text_stream_for_reading >> aux;
@@ -192,12 +204,10 @@ void Window::cargarDatos(){
 
 
         file_for_reading.close();
-        
-//        READING EL OTRO ARCHIVO
+////        ************************************
 
-
-        QFile salida("salida05_04_2012.txt");
-
+        // LEER RUTAS DE PILOTOS Y AVIONES DE ESE DÍA
+        QFile salida(fileOpened);
         salida.open(QIODevice::ReadOnly);
         QTextStream text_salida(&salida);
 
@@ -245,6 +255,8 @@ void Window::cargarDatos(){
 
         }
          salida.close();
+
+
 }
 
 
