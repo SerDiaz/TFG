@@ -261,7 +261,7 @@ void Estructura::vuelos(){
 
                     estructura=this;
                     rectanInd[i]=&rectangulo[i];
-                    rectanInd[i]->datos(tam,numeroAviones,numeroPilotos,fecha,nomVuelo,origen,destino,piloto,hInicio,hFin,avion,tamArchivo,estructura);
+                    rectangulo[i].datos(tam,numeroAviones,numeroPilotos,fecha,nomVuelo,origen,destino,piloto,hInicio,hFin,avion,tamArchivo,estructura);
 //                        SI ESTÁN MUY JUNTOS LOS VUELOS NO SOBREPONER LOS NOMBRES. SOLO SE PINTA EL FINAL
                     if(k>0)
                         vCercano = vueloCercano(lista[k-1],nomVuelo,hInicio[i],hFin);

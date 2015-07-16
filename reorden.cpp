@@ -335,10 +335,12 @@ void Reorden::retrasarAviones(int posicionActual, int idCaminoPadre){
 //                std::cout << "**********PILOTO SE PUEDE RETRASAR*************" << std::endl;
                 nuevoEnListaCerrada(nomVuelo[posicionSiguientePiloto],nomVuelo[posicionActual],idCaminoPadre);
 
-            }else if(hInicio[posicionSiguienteAvion]<(hFin[posicionActual]+retraso+0.5)){
+            }else if(hInicio[posicionSiguienteAvion]<(hFin[posicionActual]+retraso+0.5)
+                     && posicionSiguienteAvion!= -1){
 //                std::cout << "**********HAY QUE INSERTAR EN LISTA ABIERTA PORQUE NO SE PUEDE RETRASAR AVION*************" << std::endl;
                 insertar3enLista(vuelo,0,nomVuelo[posicionSiguienteAvion],-1);
-            }else if(hInicio[posicionSiguientePiloto]<(hFin[posicionActual]+retraso+0.5)){
+            }else if(hInicio[posicionSiguientePiloto]<(hFin[posicionActual]+retraso+0.5)
+                     && posicionSiguientePiloto != -1){
 //                std::cout << "**********HAY QUE INSERTAR EN LISTA ABIERTA PORQUE NO SE PUEDE RETRASAR PILOTO*************" << std::endl;
                 insertar3enLista(vuelo,0,nomVuelo[posicionSiguientePiloto],-1);
             }else{

@@ -9,7 +9,7 @@ Rectangulo::Rectangulo()
 {
     Pressed = false;
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-
+    w=new Window();
 }
 
 void Rectangulo::setScene(QGraphicsScene *s)
@@ -75,7 +75,6 @@ void Rectangulo::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Pressed = true;
     update();
     QGraphicsItem::mousePressEvent(event);
-    w=new Window();
 }
 
 void Rectangulo::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
