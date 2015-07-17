@@ -30,6 +30,7 @@ class Window : public QWidget, public ConvertirHora
 public:
     Window(QWidget *parent = 0);
     void cargarDatos();
+    void guardarDatos(QString nombreArchivo);
     void setDatos(int ta, int nav, int npi, QString fe, QString *noV, QString *ori, QString *des, QString *pi, float *ini, float *fin, QString *avi, int taAr,Estructura *est);
 
 

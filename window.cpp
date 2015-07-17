@@ -259,6 +259,64 @@ void Window::cargarDatos(){
 
 }
 
+void Window::guardarDatos(QString nombreArchivo){
+    QString dia = fecha.split("/")[0];
+
+    QString archivoLee= "salida" + dia + "_04_2012.txt";
+    QString archivo = nombreArchivo;
+
+
+    QString aux;
+    QFile file_for_PilotoAvion(archivoLee);
+    file_for_PilotoAvion.open(QIODevice::ReadOnly);
+    QTextStream PilotoAvion(&file_for_PilotoAvion);
+        PilotoAvion >> aux;
+        PilotoAvion >> aux;
+    file_for_PilotoAvion.close();
+
+    QFile file_for_writing(archivo);
+    file_for_writing.open(QIODevice::WriteOnly | QIODevice::Truncate); //
+    QTextStream text_stream_for_writing(&file_for_writing);
+
+
+    QString espacio = tr(" ");
+    QString salto = tr("\r\n");
+
+    text_stream_for_writing << fecha;
+    text_stream_for_writing << salto;
+    text_stream_for_writing << aux;
+    text_stream_for_writing << salto;
+    text_stream_for_writing << "0";
+    text_stream_for_writing << salto;
+
+
+    int i=0;
+    while (i<nAviones){
+        text_stream_for_writing << avion[i];
+        text_stream_for_writing << salto;
+        i++;
+
+    }
+
+    text_stream_for_writing << espacio;
+    text_stream_for_writing << salto;
+    text_stream_for_writing << "---";
+
+
+    i=0;
+    while (i<nPilotos){
+        text_stream_for_writing << salto;
+        text_stream_for_writing << piloto[i];
+        i++;
+    }
+
+
+
+    file_for_writing.close();
+
+
+}
+
 
 void Window::createMenus()
 {
@@ -306,8 +364,20 @@ void Window::openFile()
 
 void Window::saveFile()
 {
-    QString fileName = QFileDialog::getSaveFileName(this);
 
+    QString archivoGuardado = QFileDialog::getSaveFileName(
+                this
+                ,tr("Open File"),"",
+                "Text File(*.txt)"
+                );
+
+
+    if(crearPress==0){
+        QMessageBox::information(this,tr("No se pudo realizar"),tr("No hay cargado ningún organigrama"));
+    }else{
+        guardarDatos(archivoGuardado);
+        QMessageBox::information(this,tr("Guardado"),tr("Se ha guardado el organigrama correctamente"));
+    }
 }
 
 

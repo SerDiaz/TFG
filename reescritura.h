@@ -60,7 +60,6 @@ private:
     void readingGeneral();
     int busquedaPosicionGeneral(QString vuelo, QString fecha);
 
-    void rewrittingPilotoAvion();
     int busquedaPiloto(QString vuelo);
     int busquedaAvion(QString vuelo);
     void borrarVueloAvion(QString vuelo, int avion);
